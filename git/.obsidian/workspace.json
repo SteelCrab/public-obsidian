@@ -16,7 +16,9 @@
                 "file": "이름 없는 보드.md",
                 "kanbanViewState": {
                   "kanban-plugin": "board",
-                  "list-collapse": []
+                  "list-collapse": [
+                    false
+                  ]
                 }
               },
               "icon": "lucide-trello",
@@ -27,17 +29,14 @@
             "id": "01b994c4e8dbe2ec",
             "type": "leaf",
             "state": {
-              "type": "canvas",
+              "type": "markdown",
               "state": {
-                "file": "무제 1.canvas",
-                "viewState": {
-                  "x": 0,
-                  "y": 0,
-                  "zoom": 0
-                }
+                "file": "2026-02-02.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "lucide-layout-dashboard",
-              "title": "무제 1"
+              "icon": "lucide-file",
+              "title": "2026-02-02"
             }
           }
         ],
@@ -114,7 +113,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "무제 1.canvas",
+                "file": "2026-02-02.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -124,7 +123,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "무제 1 의 백링크"
+              "title": "2026-02-02 의 백링크"
             }
           },
           {
@@ -216,12 +215,13 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "13d86f516166cce5",
+  "active": "01b994c4e8dbe2ec",
   "lastOpenFiles": [
-    "Excalidraw/Drawing 2026-02-02 01.57.02.excalidraw.md",
-    "무제 1.canvas",
-    "Excalidraw/Drawing 2026-02-02 01.56.47.excalidraw.md",
     "이름 없는 보드.md",
+    "2026-02-02.md",
+    "무제 1.canvas",
+    "Excalidraw/Drawing 2026-02-02 01.57.02.excalidraw.md",
+    "Excalidraw/Drawing 2026-02-02 01.56.47.excalidraw.md",
     "Excalidraw",
     "git-blame.md",
     "이름 없는 보드 3.md",
@@ -238,7 +238,6 @@
     "무제.base",
     "git-tag.md",
     "무제.canvas",
-    "2026-02-02.md",
     "git-reset-vs-revert.md",
     "git-unstage.md",
     "git-restore.md",
