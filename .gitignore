@@ -1,1 +1,25 @@
-.obsidian
+# Obsidian Workspace (frequently changed, custom settings)
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+
+# Cache and Temporary Files
+.obsidian/cache
+.obsidian/.trash/
+
+# Plugin Data (possibly including API keys and tokens)
+.obsidian/plugins/*/data.json
+
+# Obsidian Sync (account information)
+.obsidian/sync.json
+.obsidian/sync-*.json
+
+# Local Graph Settings (optional)
+.obsidian/graph.json
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Temporary Files
+*.tmp
+*~
