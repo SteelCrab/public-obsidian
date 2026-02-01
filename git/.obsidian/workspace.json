@@ -1,0 +1,199 @@
+{
+  "main": {
+    "id": "e4529284dd757286",
+    "type": "split",
+    "children": [
+      {
+        "id": "f3c91f9c2af01fc9",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "a892d7c939fde3ad",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Git_05_원격저장소.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Git_05_원격저장소"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "c38dcf492cf5dc7d",
+    "type": "split",
+    "children": [
+      {
+        "id": "afe1fdfa6bf5507b",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "13d86f516166cce5",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "파일 탐색기"
+            }
+          },
+          {
+            "id": "98139a7dd1456790",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "검색"
+            }
+          },
+          {
+            "id": "eda0572bf44674d3",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "북마크"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "caaaa403ea2b7042",
+    "type": "split",
+    "children": [
+      {
+        "id": "dda28d618d223578",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "a885e3c1b7c8077a",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Git_05_원격저장소.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Git_05_원격저장소 의 백링크"
+            }
+          },
+          {
+            "id": "f551645df0951ab2",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Git_03_스테이징_커밋.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Git_03_스테이징_커밋 의 나가는 링크"
+            }
+          },
+          {
+            "id": "cf479feac5630e23",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "태그"
+            }
+          },
+          {
+            "id": "af610eb0d9987056",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "모든 속성"
+            }
+          },
+          {
+            "id": "0a1a13a9f86dde7a",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Git_03_스테이징_커밋.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Git_03_스테이징_커밋 의 개요"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 200
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:빠른 전환기 열기": false,
+      "graph:그래프 뷰 열기": false,
+      "canvas:새 캔버스 만들기": false,
+      "daily-notes:오늘의 일일 노트 열기": false,
+      "templates:템플릿 삽입": false,
+      "command-palette:명령어 팔레트 열기": false,
+      "bases:새 베이스 생성하기": false
+    }
+  },
+  "active": "a892d7c939fde3ad",
+  "lastOpenFiles": [
+    "Git_04_브랜치.md",
+    "Git_03_스테이징_커밋.md",
+    "Git_05_원격저장소.md",
+    "Git_06_병합_리베이스.md",
+    "Git_MOC.md",
+    "Git_02_저장소.md",
+    "Git_01_초기설정.md",
+    "Git_09_Stash.md",
+    "Git_12_고급기능.md",
+    "Git_10_태그.md",
+    "Git_08_로그_히스토리.md"
+  ]
+}
