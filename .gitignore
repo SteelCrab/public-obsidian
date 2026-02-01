@@ -1,25 +1,45 @@
-# Obsidian Workspace (frequently changed, custom settings)
-.obsidian/workspace.json
-.obsidian/workspace-mobile.json
-
-# Cache and Temporary Files
-.obsidian/cache
-.obsidian/.trash/
-
-# Plugin Data (possibly including API keys and tokens)
-.obsidian/plugins/*/data.json
-
-# Obsidian Sync (account information)
-.obsidian/sync.json
-.obsidian/sync-*.json
-
-# Local Graph Settings (optional)
-.obsidian/graph.json
-
-# System Files
-.DS_Store
-Thumbs.db
-
-# Temporary Files
-*.tmp
-*~
+  # ========== REQUIRED (Security) ==========                                                       
+                                                                                                    
+  # Plugin settings - may contain API keys, tokens                                                  
+  .obsidian/plugins/*/data.json                                                                     
+                                                                                                    
+  # Plugin-specific sensitive files                                                                 
+  .obsidian/quickshare.json                                                                         
+  .obsidian/plugins/*/.env                                                                          
+  .obsidian/plugins/*/secrets.json                                                                  
+                                                                                                    
+  # Obsidian Sync account info                                                                      
+  .obsidian/sync.json                                                                               
+  .obsidian/sync-*.json                                                                             
+                                                                                                    
+  # ========== RECOMMENDED (Reduce noise) ==========                                                
+                                                                                                    
+  # Workspace state (changes frequently)                                                            
+  .obsidian/workspace.json                                                                          
+  .obsidian/workspace-mobile.json                                                                   
+                                                                                                    
+  # Cache                                                                                           
+  .obsidian/cache                                                                                   
+  .obsidian/cache/                                                                                  
+                                                                                                    
+  # Trash                                                                                           
+  .obsidian/.trash/                                                                                 
+  .trash/                                                                                           
+                                                                                                    
+  # ========== OPTIONAL ==========                                                                  
+                                                                                                    
+  # Graph view settings                                                                             
+  .obsidian/graph.json                                                                              
+                                                                                                    
+  # App state                                                                                       
+  .obsidian/app.json                                                                                
+                                                                                                    
+  # ========== System Files ==========                                                              
+  .DS_Store                                                                                         
+  Thumbs.db                                                                                         
+  *.tmp                                                                                             
+  *~                                                                                                
+                                                                                                    
+  # ========== Sensitive Notes (if needed) ==========                                               
+  # Private/                                                                                        
+  # **/secret*.md 
