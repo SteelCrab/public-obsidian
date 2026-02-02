@@ -11,14 +11,14 @@
             "id": "b895e3ce77f6a6fa",
             "type": "leaf",
             "state": {
-              "type": "split-diff-view",
+              "type": "markdown",
               "state": {
-                "aFile": ".obsidian/workspace.json",
-                "bFile": ".obsidian/workspace.json",
-                "aRef": ""
+                "file": "git/git-blame.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "diff",
-              "title": "Diff: workspace.json  (Working Tree)"
+              "icon": "lucide-file",
+              "title": "git-blame"
             }
           }
         ]
@@ -196,17 +196,25 @@
   },
   "active": "b895e3ce77f6a6fa",
   "lastOpenFiles": [
+    "git/Excalidraw/Drawing 2026-02-02 01.56.47.excalidraw.md",
+    "git/git-blame.md",
+    "git/git-add.md",
+    "git/git-checkout-vs-switch.md",
+    "git/git-hooks.md",
+    "git/git-reset-vs-revert.md",
+    "git/git-unstage.md",
+    "git/git-status.md",
+    "git/git-semver.md",
+    "git/git-reset.md",
+    "git/git-pull.md",
+    "git/git-merge-vs-rebase.md",
     "git/git-reflog.md",
     "git/git-worktree.md",
     "git/git-submodule.md",
     "git/git-stash.md",
-    "git/git-reset.md",
     "git/git-branch-list.md",
     "git/Git_MOC.md",
-    "git/git-add.md",
-    "git/git-blame.md",
     "git/무제.base",
-    "git/Excalidraw/Drawing 2026-02-02 01.56.47.excalidraw.md",
     "git/git-branch-track.md",
     "무제.canvas",
     "README.ko.md",
@@ -216,15 +224,7 @@
     "git/git-conflict.md",
     "git/git-config-editor.md",
     "git/git-bisect.md",
-    "git/2026-02-02.md",
     "git/무제 1.canvas",
-    "git/이름 없는 보드.md",
-    "git/무제.md",
-    "git/git-unstage.md",
-    "git/git-undo-scenarios.md",
-    "git/git-tag.md",
-    "git/git-tag-checkout.md",
-    "git/git-status.md",
     "git/Excalidraw",
     "git"
   ]

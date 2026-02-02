@@ -39,7 +39,7 @@ D---E---F---G---A'--B'--C' main
 - 깔끔한 히스토리 원할 때
 - push 전 로컬 커밋 정리
 
-> [!warning] 황금률
+> [!warning]
 > **이미 push한 커밋은 rebase 하지 않는다**
 
 ---

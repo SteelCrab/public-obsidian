@@ -1,4 +1,5 @@
 {
   "showLineNumber": true,
-  "rightToLeft": false
+  "rightToLeft": false,
+  "promptDelete": false
 }

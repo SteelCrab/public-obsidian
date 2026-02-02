@@ -1,7 +1,0 @@
-views:
-  - type: table
-    name: 표
-  - type: table
-    name: 뷰
-  - type: table
-    name: 뷰 2
