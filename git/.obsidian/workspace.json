@@ -1,0 +1,226 @@
+{
+  "main": {
+    "id": "e4529284dd757286",
+    "type": "split",
+    "children": [
+      {
+        "id": "a5f393b94a560578",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "1fb55faed61016cd",
+            "type": "leaf",
+            "state": {
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "그래프 뷰"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "c38dcf492cf5dc7d",
+    "type": "split",
+    "children": [
+      {
+        "id": "afe1fdfa6bf5507b",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "13d86f516166cce5",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "파일 탐색기"
+            }
+          },
+          {
+            "id": "98139a7dd1456790",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "검색"
+            }
+          },
+          {
+            "id": "eda0572bf44674d3",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "북마크"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 200
+  },
+  "right": {
+    "id": "caaaa403ea2b7042",
+    "type": "split",
+    "children": [
+      {
+        "id": "dda28d618d223578",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "a885e3c1b7c8077a",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "백링크"
+            }
+          },
+          {
+            "id": "f551645df0951ab2",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Git_03_스테이징_커밋.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Git_03_스테이징_커밋 의 나가는 링크"
+            }
+          },
+          {
+            "id": "cf479feac5630e23",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "태그"
+            }
+          },
+          {
+            "id": "af610eb0d9987056",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "모든 속성"
+            }
+          },
+          {
+            "id": "0a1a13a9f86dde7a",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "개요"
+            }
+          },
+          {
+            "id": "5cfc63e2dbbdabaf",
+            "type": "leaf",
+            "state": {
+              "type": "git-view",
+              "state": {},
+              "icon": "git-pull-request",
+              "title": "Source Control"
+            }
+          }
+        ],
+        "currentTab": 5
+      }
+    ],
+    "direction": "horizontal",
+    "width": 567.5
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:빠른 전환기 열기": false,
+      "graph:그래프 뷰 열기": false,
+      "canvas:새 캔버스 만들기": false,
+      "daily-notes:오늘의 일일 노트 열기": false,
+      "command-palette:명령어 팔레트 열기": false,
+      "bases:새 베이스 생성하기": false,
+      "obsidian-kanban:새 보드 만들기": false,
+      "templates:템플릿 삽입": false,
+      "obsidian-git:Open Git source control": false
+    }
+  },
+  "active": "1fb55faed61016cd",
+  "lastOpenFiles": [
+    "Git_MOC.md",
+    "2026-02-02.md",
+    "이름 없는 보드.md",
+    "무제 1.canvas",
+    "Excalidraw/Drawing 2026-02-02 01.57.02.excalidraw.md",
+    "Excalidraw/Drawing 2026-02-02 01.56.47.excalidraw.md",
+    "Excalidraw",
+    "git-blame.md",
+    "이름 없는 보드 3.md",
+    "이름 없는 보드 4.md",
+    "이름 없는 보드 2.md",
+    "이름 없는 보드 1.md",
+    "이름 없는 보드 5.md",
+    "이름 없는 보드 6.md",
+    "git-branch-delete.md",
+    "무제 1.base",
+    "무제.md",
+    "무제 2.canvas",
+    "git-undo-scenarios.md",
+    "무제.base",
+    "git-tag.md",
+    "무제.canvas",
+    "git-reset-vs-revert.md",
+    "git-unstage.md",
+    "git-restore.md",
+    "git-reset.md",
+    "git-semver.md",
+    "git-add.md",
+    "git-bisect.md",
+    "git-cherry-pick.md",
+    "git-branch-list.md"
+  ]
+}
