@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "97585a82ae9c0080",
+        "id": "901d35a7117ca682",
         "type": "tabs",
         "children": [
           {
-            "id": "fcbecbc671ef1cd2",
+            "id": "b895e3ce77f6a6fa",
             "type": "leaf",
             "state": {
               "type": "split-diff-view",
@@ -180,7 +180,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 590.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -194,35 +194,37 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "fcbecbc671ef1cd2",
+  "active": "b895e3ce77f6a6fa",
   "lastOpenFiles": [
+    "git/git-reflog.md",
+    "git/git-worktree.md",
+    "git/git-submodule.md",
+    "git/git-stash.md",
+    "git/git-reset.md",
+    "git/git-branch-list.md",
+    "git/Git_MOC.md",
+    "git/git-add.md",
+    "git/git-blame.md",
     "git/무제.base",
+    "git/Excalidraw/Drawing 2026-02-02 01.56.47.excalidraw.md",
+    "git/git-branch-track.md",
+    "무제.canvas",
+    "README.ko.md",
+    "git/git-log.md",
+    "git/git-difftool.md",
+    "git/git-config-alias.md",
+    "git/git-conflict.md",
+    "git/git-config-editor.md",
+    "git/git-bisect.md",
     "git/2026-02-02.md",
     "git/무제 1.canvas",
     "git/이름 없는 보드.md",
     "git/무제.md",
-    "git/git-worktree.md",
     "git/git-unstage.md",
     "git/git-undo-scenarios.md",
     "git/git-tag.md",
     "git/git-tag-checkout.md",
-    "git/git-submodule.md",
     "git/git-status.md",
-    "git/git-stash.md",
-    "git/git-stash-workflow.md",
-    "git/git-show.md",
-    "git/git-semver.md",
-    "git/git-revert.md",
-    "git/git-restore.md",
-    "git/git-reset.md",
-    "git/git-reset-vs-revert.md",
-    "git/git-remote.md",
-    "git/git-reflog.md",
-    "git/git-rebase.md",
-    "git/git-rebase-interactive.md",
-    "git/git-push.md",
-    "git/git-push-force.md",
-    "git/git-pull.md",
     "git/Excalidraw",
     "git"
   ]
