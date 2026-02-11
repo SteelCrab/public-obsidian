@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: fastapi-pod
+  template:
+    metadata:
+      labels:
+        app: fastapi-pod
+    spec:
+      imagePullSecrets:
+        - name: gitlab-registry-secret
+      containers:
+      - name: fastapi-container
+        image: registry.gitlab.com/pyh5523/pista-megazoncloud/fastapi:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: MYSQL_HOST
+          value: "mysql-service"
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: MYSQL_USER
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: MYSQL_PASSWORD
+        - name: MYSQL_DB
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: MYSQL_DATABASE

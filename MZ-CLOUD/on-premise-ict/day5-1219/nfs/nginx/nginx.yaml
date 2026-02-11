@@ -1,0 +1,99 @@
+
+---
+# Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nfs
+---
+# Secret - GitLab Container Registry 인증
+apiVersion: v1
+kind: Secret
+metadata:
+  name: gitlab-registry-secret
+  namespace: nfs
+type: kubernetes.io/dockerconfigjson
+data:
+  .dockerconfigjson: ${DOCKER_CONFIG_JSON_BASE64}
+---
+# pv 
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-pv
+spec:
+  capacity:
+    storage: 2Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  # Retain : 삭제하지 않음 (Default)
+  # Delete :  데이터 + pv 삭제
+  # Recycle : 데이터만 삭제 후 재사용
+  persistentVolumeReclaimPolicy: Retain 
+  nfs:
+    server: ${NFS_SERVER} # 마스터 노드 IP (NFS 서버)
+    path: /DATA  # NFS 공유 경로
+---
+
+# pvc
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nfs-pvc
+  namespace: nfs
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 2Gi
+  # pv 지정 
+  volumeName: nfs-pv
+
+---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deploy
+  namespace: nfs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      imagePullSecrets:
+        - name: gitlab-registry-secret
+      containers:
+      - name: nginx-container
+        image: registry.gitlab.com/pyh5523/pista-megazoncloud/nfs-nginx:latest
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: nfs-pvc-vol
+          mountPath: /usr/share/nginx/html
+      volumes:
+      - name: nfs-pvc-vol
+        persistentVolumeClaim:
+          claimName: nfs-pvc
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc
+  namespace: nfs
+spec:
+  type: LoadBalancer 
+  selector:
+    app: nginx
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80

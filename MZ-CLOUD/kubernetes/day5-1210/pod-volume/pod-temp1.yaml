@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: pod-temp
+  name: pod-temp
+spec:
+  containers:
+    - image: ubuntu:24.04
+      name: pod-temp-1
+      resources: {}
+      stdin: true
+      stdinOnce: true
+      tty: true
+      volumeMounts:
+        - name: pod-vol
+          mountPath: /data1
+    - image: ubuntu:24.04
+      name: pod-temp-2
+      resources: {}
+      stdin: true
+      stdinOnce: true
+      tty: true
+      volumeMounts:
+        - name: pod-vol
+          mountPath: /data2
+
+  volumes:
+    - name: pod-vol
+      emptyDir: {}

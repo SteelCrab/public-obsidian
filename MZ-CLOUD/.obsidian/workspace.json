@@ -1,0 +1,289 @@
+{
+  "main": {
+    "id": "e4529284dd757286",
+    "type": "split",
+    "children": [
+      {
+        "id": "985528ddb4a614e6",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "976534baa0edb9bf",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "github/gha-example-python-docker.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "gha-example-python-docker"
+            }
+          },
+          {
+            "id": "9ef5562b6d35e124",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "docker/Linux/AmazonLinux.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "AmazonLinux"
+            }
+          },
+          {
+            "id": "38b9c142551d84f1",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "cicd/CICD_MOC.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "CICD_MOC"
+            }
+          }
+        ],
+        "currentTab": 2
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "c38dcf492cf5dc7d",
+    "type": "split",
+    "children": [
+      {
+        "id": "afe1fdfa6bf5507b",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "13d86f516166cce5",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": true
+              },
+              "icon": "lucide-folder-closed",
+              "title": "파일 탐색기"
+            }
+          },
+          {
+            "id": "98139a7dd1456790",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "검색"
+            }
+          },
+          {
+            "id": "eda0572bf44674d3",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "북마크"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 200
+  },
+  "right": {
+    "id": "caaaa403ea2b7042",
+    "type": "split",
+    "children": [
+      {
+        "id": "dda28d618d223578",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "a885e3c1b7c8077a",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "백링크"
+            }
+          },
+          {
+            "id": "f551645df0951ab2",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "나가는 링크"
+            }
+          },
+          {
+            "id": "cf479feac5630e23",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "태그"
+            }
+          },
+          {
+            "id": "af610eb0d9987056",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "모든 속성"
+            }
+          },
+          {
+            "id": "0a1a13a9f86dde7a",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "개요"
+            }
+          },
+          {
+            "id": "5cfc63e2dbbdabaf",
+            "type": "leaf",
+            "state": {
+              "type": "git-view",
+              "state": {},
+              "icon": "git-pull-request",
+              "title": "Source Control"
+            }
+          },
+          {
+            "id": "ccb16980cacdfef5",
+            "type": "leaf",
+            "pinned": true,
+            "state": {
+              "type": "graph",
+              "state": {},
+              "pinned": true,
+              "icon": "lucide-git-fork",
+              "title": "그래프 뷰"
+            }
+          }
+        ],
+        "currentTab": 6
+      }
+    ],
+    "direction": "horizontal",
+    "width": 1130.5
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "graph:그래프 뷰 열기": false,
+      "switcher:빠른 전환기 열기": false,
+      "canvas:새 캔버스 만들기": false,
+      "daily-notes:오늘의 일일 노트 열기": false,
+      "command-palette:명령어 팔레트 열기": false,
+      "bases:새 베이스 생성하기": false,
+      "templates:템플릿 삽입": false,
+      "obsidian-kanban:새 보드 만들기": false,
+      "obsidian-git:Open Git source control": false,
+      "templater-obsidian:Templater": false
+    }
+  },
+  "active": "ccb16980cacdfef5",
+  "lastOpenFiles": [
+    "cicd/CICD_MOC.md",
+    "cicd/2026-02-03.md",
+    "aws/AWS_MOC.md",
+    "aws-ec2.md",
+    "git/git-diff.md",
+    "git/git-workflow.md",
+    "git/git-merge.md",
+    "aws/aws-deploy.md",
+    "aws/aws-monitoring.md",
+    "aws/aws-security.md",
+    "aws/aws-network.md",
+    "aws/aws-database.md",
+    "aws/aws-storage.md",
+    "aws/aws-compute.md",
+    "aws/aws-config.md",
+    "gitlab/gitlab-docker.md",
+    "gitlab/gitlab-deployment.md",
+    "gitlab/gitlab-data.md",
+    "gitlab/gitlab-flow.md",
+    "gitlab/gitlab-environment.md",
+    "git/git-tag.md",
+    "gitlab/gitlab-structure.md",
+    "git/git-tag-checkout.md",
+    "git/git-undo.md",
+    "git/git-undo-scenarios.md",
+    "github/gha-examples.md",
+    "gitlab",
+    "aws",
+    "cicd/images/2026-02-03 오후 3.55.13.png",
+    "cicd/images/2026-02-03 오후 12.00.17.png",
+    "cicd/images/2026-02-03 오후 3.27.06.png",
+    "cicd/images/2026-02-03 오후 3.25.48.png",
+    "cicd/images/2026-02-03 오후 1.55.30.png",
+    "cicd/images/2026-02-03 오후 2.55.23.png",
+    "kubernetes",
+    "docker/Linux",
+    "cicd/images/2026-02-03 오후 1.57.51.png",
+    "cicd/images/2026-02-03 오후 1.55.30 1.png",
+    "2026-02-03 오후 1.55.30 1.png",
+    "cicd/images/2026-02-03 오전 11.53.19.png",
+    "docker",
+    "cicd/images",
+    "무제.base",
+    "cicd",
+    "gitignore (1)",
+    "github",
+    "무제 1.canvas",
+    "무제 2.canvas",
+    "무제.canvas"
+  ]
+}

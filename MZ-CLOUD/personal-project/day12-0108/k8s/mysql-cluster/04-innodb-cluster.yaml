@@ -1,0 +1,68 @@
+# =============================================================================
+# [Step 4] MySQL InnoDB Cluster - Oracle MySQL Operator
+# 자동 클러스터 생성, Failover, Router 관리
+# =============================================================================
+#
+# 선행조건: Step 1~3 (mysql-operator, secret, local-storage)
+#
+# =============================================================================
+apiVersion: mysql.oracle.com/v2
+kind: InnoDBCluster
+metadata:
+  name: mysql-cluster
+  namespace: gition
+spec:
+  # MySQL 인스턴스 수 (3개 권장 - 쿼럼)
+  instances: 3
+  
+  # MySQL Router 인스턴스 수
+  router:
+    instances: 2
+  
+  # TLS 설정 (Self-Signed 인증서 사용)
+  tlsUseSelfSigned: true
+  
+  # Secret 참조 (root 비밀번호)
+  secretName: mysql-cluster-secret
+  
+  # MySQL 버전
+  version: "8.0.35"
+  
+  # 이미지 Pull Policy
+  imagePullPolicy: IfNotPresent
+  
+  # MySQL Server 설정
+  mycnf: |
+    [mysqld]
+    # InnoDB 설정
+    innodb_buffer_pool_size=256M
+    max_connections=200
+    
+    # 문자셋
+    character-set-server=utf8mb4
+    collation-server=utf8mb4_unicode_ci
+    
+    # 성능 설정
+    skip_host_cache
+    skip_name_resolve
+  
+  # Pod 리소스 설정
+  podSpec:
+    containers:
+    - name: mysql
+      resources:
+        requests:
+          cpu: 250m
+          memory: 512Mi
+        limits:
+          cpu: 1000m
+          memory: 2Gi
+  
+  # 데이터 Persistence (Local PV)
+  datadirVolumeClaimTemplate:
+    accessModes:
+    - ReadWriteOnce
+    storageClassName: local-storage
+    resources:
+      requests:
+        storage: 5Gi

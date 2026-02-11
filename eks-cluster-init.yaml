@@ -1,0 +1,53 @@
+# eksctl 설정 파일 버전 정의
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+# 클러스터 기본 정보 설정
+metadata:
+  name: pista-cluster
+  region: ap-southeast-1
+  version: "1.31"
+
+# 기존 VPC 및 서브넷 활용 설정
+vpc:
+  id: vpc-067604da147fbd40a
+  subnets:
+    # 외부 로드밸런서가 위치할 퍼블릭 서브넷 (elb 태그 필요)
+    public:
+      ap-southeast-1a:
+        id: subnet-0f088b6509fe031b3
+      ap-southeast-1b:
+        id: subnet-0c4132c130561f5b6
+      ap-southeast-1c:
+        id: subnet-0b027cd2c6bd27b4b
+    # 실제 워커 노드가 위치할 프라이빗 서브넷 (internal-elb 태그 필요)
+    private:
+      ap-southeast-1a:
+        id: subnet-02a6f3654c4525250
+      ap-southeast-1b:
+        id: subnet-0ff40cb6c629d5200
+      ap-southeast-1c:
+        id: subnet-03f3128d159e662d2
+  autoAllocateIPv6: false
+
+# 관리형 노드 그룹(Managed Node Group) 설정
+managedNodeGroups:
+  - name: pista-noge-group
+    instanceType: t3.medium
+    # minSize: 1                 # 최소 1대 유지
+    # maxSize: 3                 # 최대 3대까지 확장 가능
+    desiredCapacity: 3
+    volumeSize: 20
+    privateNetworking: true
+    securityGroups:
+      attachIDs: [sg-03c40d9a7665fd3d8]
+    iam:
+      withAddonPolicies:
+        imageBuilder: true # ECR 이미지 접근 권한
+        autoScaler: true # Cluster Autoscaler 권한
+        albIngress: true # 로드밸런서 권한
+        cloudWatch: true # CloudWatch 로그 권한
+
+# IAM OIDC 프로바이더 설정
+iam:
+  withOIDC: true

@@ -1,0 +1,54 @@
+# 파드들이 공유할 수 있는 네트워크 상의 볼륨 디렉토리 만들어 사용하기
+
+# ############################################################
+# NFS 설치 및 설정
+# ============================================================
+# 1. NFS 설치 : 여기서는 마스터 노드에 설치하도록 하겠음.
+sudo apt update && sudo apt install nfs-kernel-server -y
+
+# 2. 공유디렉토리 설정하기
+# 1) 공유할 폴더 생성 및 권한 부여
+sudo mkdir -p /DATA
+
+# 2) 권한 설정 (쿠버네티스 파드가 자유롭게 읽고 쓸 수 있도록 777 부여)
+sudo chmod -R 777 /DATA
+sudo chown nobody:nogroup /DATA
+
+# 3) NFS 설정 파일 수정
+# 이 명령어를 그대로 복사해서 실행하면 파일 끝에 설정이 추가됩니다.
+echo "/DATA *(rw,sync,no_subtree_check,no_root_squash)" | sudo tee -a /etc/exports
+
+# 4) 설정 반영 및 서비스 재시작
+sudo exportfs -ra
+sudo systemctl restart nfs-kernel-server
+
+# 5) 각 노드에 접속을 위한 nfs-common 패키지 설치
+sudo apt update && sudo apt install nfs-common -y
+
+# ssh k8s-n1 "sudo apt update && sudo apt remove nfs-common -y"
+# ssh k8s-n2 "sudo apt update && sudo apt remove nfs-common -y"
+# ssh k8s-n3 "sudo apt update && sudo apt remove nfs-common -y"
+
+
+
+# ############################################################
+# PV 설정
+# 주의할 점 : /DATA안에 PA로 공유할 디렉토리를 미리 생성해 놓아야 한다.
+# sudo mkdir -p /DATA/<directory_name>/<directory_name>
+# sudo chown -R nobody:nogroup /DATA
+# sudo chmod -R 777 /DATA
+# ============================================================
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-pv
+spec:
+  capacity:
+    storage: 10Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: /DATA  # <--- 아까 만든 경로와 정확히 일치해야 합니다.
+    server: <NFS_서버_IP>  # 실제 NFS 서버의 IP 주소를 입력하세요.

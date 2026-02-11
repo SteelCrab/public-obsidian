@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Architecture Template - GCP Tree Style</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root {
+    --bg: #F8F9FC; --card: #FFFFFF; --border: #E2E6EF;
+    --text-primary: #1A1D2B; --text-secondary: #6B7280; --text-muted: #9CA3AF;
+    --gcp-blue: #4285F4; --gcp-blue-light: #E8F0FE;
+    --gcp-green: #34A853; --gcp-green-light: #E6F4EA;
+    --gcp-yellow: #FBBC04; --gcp-yellow-light: #FEF7E0;
+    --gcp-red: #EA4335; --gcp-red-light: #FCE8E6;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.06);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.08);
+    --radius: 16px; --radius-sm: 10px;
+  }
+  body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text-primary); display: flex; justify-content: center; padding: 40px 20px; }
+  .canvas { width: 1200px; background: var(--card); border-radius: 24px; box-shadow: var(--shadow-lg); overflow: hidden; }
+  .header { padding: 48px 56px 32px; background: linear-gradient(135deg, #E8F0FE 0%, #FAFBFF 50%, #E6F4EA 100%); border-bottom: 1px solid var(--border); }
+  .header h1 { font-size: 32px; font-weight: 800; color: var(--text-primary); }
+  .header p { font-size: 14px; color: var(--text-secondary); margin-top: 8px; }
+  .content { padding: 40px 56px 56px; }
+
+  /* Tree structure */
+  .tree { font-family: 'JetBrains Mono', monospace; font-size: 14px; line-height: 2; }
+  .tree-section { margin-bottom: 32px; }
+  .tree-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  .tree-line { white-space: pre; }
+  .tree-connector { color: var(--border); }
+  .tree-label { font-weight: 600; }
+  .tree-value { color: var(--text-secondary); font-weight: 400; }
+  .tree-highlight { display: inline-block; padding: 1px 8px; border-radius: 4px; font-size: 12px; font-weight: 500; }
+
+  .hl-blue { background: var(--gcp-blue-light); color: var(--gcp-blue); }
+  .hl-green { background: var(--gcp-green-light); color: var(--gcp-green); }
+  .hl-yellow { background: var(--gcp-yellow-light); color: #B06E00; }
+  .hl-red { background: var(--gcp-red-light); color: var(--gcp-red); }
+  .hl-muted { background: #F3F4F6; color: var(--text-secondary); }
+
+  .divider { height: 1px; background: var(--border); margin: 24px 0; }
+</style>
+</head>
+<body>
+<div class="canvas">
+  <div class="header">
+    <h1>GCP HTTP(S) LB + MIG Architecture</h1>
+    <p>Load Balancer + Managed Instance Group + Instance Template</p>
+  </div>
+  <div class="content">
+
+    <!-- LB Section -->
+    <div class="tree-section">
+      <div class="tree-title">Load Balancer</div>
+      <div class="tree">
+        <div class="tree-line"><span class="tree-label">User</span> <span class="tree-value">&#x2192; http://&lt;Global IP&gt;</span></div>
+        <div class="tree-line"><span class="tree-connector">&#x2502;</span></div>
+        <div class="tree-line"><span class="tree-label">HTTP(S) Load Balancer</span> <span class="tree-highlight hl-blue">Global</span></div>
+        <div class="tree-line"><span class="tree-connector">&#x251C;&#x2500;&#x2500;</span> <span class="tree-label">Forwarding Rule</span> <span class="tree-value">(pista-http-rule, port:80)</span></div>
+        <div class="tree-line"><span class="tree-connector">&#x2502;   &#x2514;&#x2500;&#x2500;</span> <span class="tree-value">Global IP (pista-lb-ip)</span></div>
+        <div class="tree-line"><span class="tree-connector">&#x2502;</span></div>
+        <div class="tree-line"><span class="tree-connector">&#x251C;&#x2500;&#x2500;</span> <span class="tree-label">Target HTTP Proxy</span> <span class="tree-value">(pista-http-proxy)</span></div>
+        <div class="tree-line"><span class="tree-connector">&#x2502;   &#x2514;&#x2500;&#x2500;</span> <span class="tree-label">URL Map</span> <span class="tree-value">(pista-url-map)</span></div>
+        <div class="tree-line"><span class="tree-connector">&#x2502;       &#x2514;&#x2500;&#x2500;</span> <span class="tree-value">default &#x2192; Backend Service</span></div>
+        <div class="tree-line"><span class="tree-connector">&#x2502;</span></div>
+        <div class="tree-line"><span class="tree-connector">&#x2514;&#x2500;&#x2500;</span> <span class="tree-label">Backend Service</span> <span class="tree-value">(pista-backend-service)</span></div>
+        <div class="tree-line"><span class="tree-connector">    &#x251C;&#x2500;&#x2500;</span> <span class="tree-value">Policy: UTILIZATION (max 80%)</span></div>
+        <div class="tree-line"><span class="tree-connector">    &#x251C;&#x2500;&#x2500;</span> <span class="tree-label">Health Check</span> <span class="tree-highlight hl-green">HTTP:80 path:/</span></div>
+        <div class="tree-line"><span class="tree-connector">    &#x2514;&#x2500;&#x2500;</span> <span class="tree-label">MIG</span> <span class="tree-value">(pista-web-mig)</span> <span class="tree-highlight hl-blue">Regional</span></div>
+        <div class="tree-line"><span class="tree-connector">        &#x251C;&#x2500;&#x2500;</span> <span class="tree-value">Autoscaling: min:2 / max:5 / CPU 75%</span></div>
+        <div class="tree-line"><span class="tree-connector">        &#x251C;&#x2500;&#x2500;</span> <span class="tree-value">Auto-healing: Health Check &#x2192; recreate</span></div>
+        <div class="tree-line"><span class="tree-connector">        &#x2514;&#x2500;&#x2500;</span> <span class="tree-label">Instance Template</span> <span class="tree-value">(pista-web-template)</span></div>
+        <div class="tree-line"><span class="tree-connector">            &#x251C;&#x2500;&#x2500;</span> <span class="tree-highlight hl-muted">e2-micro</span> <span class="tree-highlight hl-muted">ubuntu-2204-lts</span> <span class="tree-highlight hl-muted">tag:http-server</span></div>
+        <div class="tree-line"><span class="tree-connector">            &#x251C;&#x2500;&#x2500;</span> <span class="tree-value">web-xxxx (zone-a)</span> <span class="tree-highlight hl-green">auto</span></div>
+        <div class="tree-line"><span class="tree-connector">            &#x2514;&#x2500;&#x2500;</span> <span class="tree-value">web-yyyy (zone-b)</span> <span class="tree-highlight hl-green">auto</span></div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Network Section -->
+    <div class="tree-section">
+      <div class="tree-title">Network</div>
+      <div class="tree">
+        <div class="tree-line"><span class="tree-label">pista-vpc</span> <span class="tree-highlight hl-blue">Custom Mode</span></div>
+        <div class="tree-line"><span class="tree-connector">&#x251C;&#x2500;&#x2500;</span> <span class="tree-label">pista-public-subnet</span> <span class="tree-highlight hl-muted">10.0.1.0/24</span></div>
+        <div class="tree-line"><span class="tree-connector">&#x2502;   &#x2514;&#x2500;&#x2500;</span> <span class="tree-value">MIG instances (External IP)</span></div>
+        <div class="tree-line"><span class="tree-connector">&#x2502;</span></div>
+        <div class="tree-line"><span class="tree-connector">&#x251C;&#x2500;&#x2500;</span> <span class="tree-label">pista-private-subnet</span> <span class="tree-highlight hl-muted">10.0.2.0/24</span></div>
+        <div class="tree-line"><span class="tree-connector">&#x2502;   &#x2514;&#x2500;&#x2500;</span> <span class="tree-value">Private VM (no External IP)</span></div>
+        <div class="tree-line"><span class="tree-connector">&#x2502;</span></div>
+        <div class="tree-line"><span class="tree-connector">&#x251C;&#x2500;&#x2500;</span> <span class="tree-label">Cloud Router</span> <span class="tree-value">(pista-router)</span></div>
+        <div class="tree-line"><span class="tree-connector">&#x2502;   &#x2514;&#x2500;&#x2500;</span> <span class="tree-label">Cloud NAT</span> <span class="tree-value">(pista-nat)</span> <span class="tree-highlight hl-yellow">outbound</span></div>
+        <div class="tree-line"><span class="tree-connector">&#x2502;</span></div>
+        <div class="tree-line"><span class="tree-connector">&#x2514;&#x2500;&#x2500;</span> <span class="tree-label">Firewall Rules</span></div>
+        <div class="tree-line"><span class="tree-connector">    &#x251C;&#x2500;&#x2500;</span> <span class="tree-value">allow-ssh</span> <span class="tree-highlight hl-muted">tcp:22</span></div>
+        <div class="tree-line"><span class="tree-connector">    &#x251C;&#x2500;&#x2500;</span> <span class="tree-value">allow-http</span> <span class="tree-highlight hl-muted">tcp:80,443</span></div>
+        <div class="tree-line"><span class="tree-connector">    &#x251C;&#x2500;&#x2500;</span> <span class="tree-value">allow-internal</span> <span class="tree-highlight hl-muted">all (10.0.0.0/8)</span></div>
+        <div class="tree-line"><span class="tree-connector">    &#x2514;&#x2500;&#x2500;</span> <span class="tree-value">allow-health-check</span> <span class="tree-highlight hl-green">Google HC</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  mysql-master:
+    image: mysql:8.0
+    container_name: mysql-master
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: '${ROOT_PASSWORD}' # 루트 비밀번호 설정
+      TZ: Asia/Seoul
+    volumes:
+      # 1. 환경 설정 파일 주입
+      - ./config/my.cnf:/etc/mysql/conf.d/my.cnf:ro
+      # 2. 데이터 영구 저장
+      - ./data:/var/lib/mysql
+      # 3. 초기 계정 생성 스크립트 (필요 시)
+      - ./initdb.d:/docker-entrypoint-initdb.d:ro
+    networks:
+      - mysql-network
+
+networks:
+  mysql-network:
+    driver: bridge

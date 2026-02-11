@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-initdb
+data:
+  init.sql: |
+    CREATE TABLE users (
+      id INT PRIMARY KEY AUTO_INCREMENT,
+      name VARCHAR(100)
+    );
+    INSERT INTO users (name) VALUES ('pista');

@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: blog-web
+  labels:
+    name: blog
+spec:
+  volumes:
+    - name: shared-logs
+      emptyDir: {}
+  containers:
+    - name: blog-web-container
+      image: nginx:1.29.3-alpine
+      volumeMounts:
+        - name: shared-logs
+          mountPath: /var/log/nginx
+    - name: sidecar-container
+      image: ubuntu:24.04
+      command:
+        [
+          "/bin/sh",
+          "-c",
+          "while true; do cat /var/log/nginx/access.log /var/log/nginx/error.log; sleep 30; done",
+        ]
+      volumeMounts:
+        - name: shared-logs
+          mountPath: /var/log/nginx

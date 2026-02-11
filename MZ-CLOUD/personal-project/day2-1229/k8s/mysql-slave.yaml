@@ -1,0 +1,268 @@
+# =============================================================================
+# MySQL Slave StatefulSet for Gition
+# - 2 replicas for read scaling
+# - Auto-configure replication from Master (172.100.100.11)
+# =============================================================================
+
+# =============================================================================
+# 1. ConfigMap - MySQL Slave 설정
+# =============================================================================
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-slave-config
+  namespace: gition
+data:
+  my.cnf: |
+    [mysqld]
+    server-id = 2
+    gtid_mode = ON
+    enforce_gtid_consistency = ON
+    read_only = ON
+    log_bin = mysql-bin
+    binlog_format = ROW
+    skip_host_cache
+    skip_name_resolve
+
+  # Replication 설정 스크립트
+  setup-replication.sh: |
+    #!/bin/bash
+    set -e
+
+    # MySQL이 준비될 때까지 대기
+    echo "[Replication Setup] Waiting for MySQL to be ready..."
+    until mysql -uroot -p"$MYSQL_ROOT_PASSWORD" -e "SELECT 1" &>/dev/null; do
+      echo "[Replication Setup] MySQL not ready, waiting..."
+      sleep 5
+    done
+    echo "[Replication Setup] MySQL is ready!"
+
+    # pista 사용자 인증 방식 변경 (caching_sha2_password → mysql_native_password)
+    echo "[Replication Setup] Configuring pista user with mysql_native_password..."
+    mysql -uroot -p"$MYSQL_ROOT_PASSWORD" -e "
+      ALTER USER 'pista'@'%' IDENTIFIED WITH mysql_native_password BY '${MYSQL_USER_PASSWORD}';
+      GRANT ALL PRIVILEGES ON gition.* TO 'pista'@'%';
+      FLUSH PRIVILEGES;
+    " 2>/dev/null || echo "[Replication Setup] pista user config skipped (may already exist)"
+
+    # 초기 스키마 동기화 (테이블이 없으면 Master에서 복사)
+    TABLE_COUNT=$(mysql -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='gition';" 2>/dev/null || echo "0")
+    if [ "$TABLE_COUNT" -eq 0 ] || [ "$TABLE_COUNT" = "0" ]; then
+      echo "[Replication Setup] No tables found. Importing schema from Master..."
+      mysqldump -h "${MYSQL_MASTER_HOST}" -uroot -p"${MYSQL_ROOT_PASSWORD}" \
+        --single-transaction --set-gtid-purged=OFF gition 2>/dev/null | \
+        mysql -uroot -p"$MYSQL_ROOT_PASSWORD" gition
+      echo "[Replication Setup] Schema import completed!"
+    else
+      echo "[Replication Setup] Tables already exist ($TABLE_COUNT tables). Skipping schema import."
+    fi
+
+    # 이미 복제가 설정되어 있는지 확인
+    REPLICA_STATUS=$(mysql -uroot -p"$MYSQL_ROOT_PASSWORD" -N -e "SHOW REPLICA STATUS\G" 2>/dev/null || true)
+    if echo "$REPLICA_STATUS" | grep -q "Replica_IO_Running: Yes"; then
+      echo "[Replication Setup] Replication already running. Skipping setup."
+      exit 0
+    fi
+
+    echo "[Replication Setup] Configuring replication to Master..."
+
+    # 복제 중지 및 리셋 (기존 설정이 있을 경우)
+    mysql -uroot -p"$MYSQL_ROOT_PASSWORD" -e "STOP REPLICA; RESET REPLICA ALL;" 2>/dev/null || true
+
+    # 복제 설정
+    mysql -uroot -p"$MYSQL_ROOT_PASSWORD" <<EOF
+    CHANGE REPLICATION SOURCE TO
+      SOURCE_HOST='${MYSQL_MASTER_HOST}',
+      SOURCE_PORT=3306,
+      SOURCE_USER='${REPL_USER}',
+      SOURCE_PASSWORD='${REPL_PASSWORD}',
+      SOURCE_AUTO_POSITION=1,
+      GET_SOURCE_PUBLIC_KEY=1;
+    EOF
+
+    # 복제 시작
+    mysql -uroot -p"$MYSQL_ROOT_PASSWORD" -e "START REPLICA;"
+
+    # 결과 확인
+    sleep 3
+    echo "[Replication Setup] Checking replication status..."
+    mysql -uroot -p"$MYSQL_ROOT_PASSWORD" -e "SHOW REPLICA STATUS\G" | grep -E "Replica_IO_Running|Replica_SQL_Running|Last_Error"
+
+    echo "[Replication Setup] Done!"
+
+
+# =============================================================================
+# 2. StatefulSet - MySQL Slave Pods
+# =============================================================================
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql-slave
+  namespace: gition
+spec:
+  serviceName: mysql-read
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mysql
+      role: slave
+  template:
+    metadata:
+      labels:
+        app: mysql
+        role: slave
+    spec:
+      # InitContainer - Pod별 server-id 동적 생성 (mysql-slave-0→100, mysql-slave-1→101)
+      initContainers:
+      - name: init-mysql
+        image: mysql:8.0
+        command:
+        - bash
+        - "-c"
+        - |
+          # Pod 인덱스에 따라 server-id 설정
+          [[ $HOSTNAME =~ -([0-9]+)$ ]] || exit 1
+          ordinal=${BASH_REMATCH[1]}
+          echo "[mysqld]" > /mnt/conf.d/server-id.cnf
+          echo "server-id=$((100 + $ordinal))" >> /mnt/conf.d/server-id.cnf
+          echo "[Init] Set server-id=$((100 + $ordinal)) for $HOSTNAME"
+        volumeMounts:
+        - name: conf
+          mountPath: /mnt/conf.d
+
+      containers:
+      # Main MySQL Container
+      - name: mysql
+        image: mysql:8.0
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: root-password
+        - name: MYSQL_DATABASE
+          value: gition
+        - name: MYSQL_USER
+          value: pista
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: user-password
+        ports:
+        - name: mysql
+          containerPort: 3306
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/mysql
+        - name: conf
+          mountPath: /etc/mysql/conf.d
+        - name: config-map
+          mountPath: /etc/mysql/conf.d/slave.cnf
+          subPath: my.cnf
+        resources:
+          requests:
+            cpu: 250m
+            memory: 512Mi
+          limits:
+            cpu: 1000m
+            memory: 2Gi
+        livenessProbe:
+          exec:
+            command:
+            - bash
+            - -c
+            - mysqladmin ping -uroot -p"$MYSQL_ROOT_PASSWORD"
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          exec:
+            command:
+            - bash
+            - -c
+            - mysql -uroot -p"$MYSQL_ROOT_PASSWORD" -e "SELECT 1"
+          initialDelaySeconds: 5
+          periodSeconds: 5
+
+      # Sidecar - 복제 설정 자동화 (한 번 실행 후 sleep)
+      - name: replication-setup
+        image: mysql:8.0
+        command:
+        - bash
+        - -c
+        - |
+          # 스크립트 복사 및 실행
+          cp /scripts/setup-replication.sh /tmp/setup-replication.sh
+          chmod +x /tmp/setup-replication.sh
+          /tmp/setup-replication.sh
+          # 설정 완료 후 대기 (컨테이너 유지)
+          echo "[Replication Setup] Sleeping forever..."
+          sleep infinity
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: root-password
+        - name: MYSQL_MASTER_HOST
+          value: "172.100.100.11"
+        - name: REPL_USER
+          value: "repl_pista"
+        - name: REPL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: repl-password
+        - name: MYSQL_USER_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: user-password
+        volumeMounts:
+        - name: config-map
+          mountPath: /scripts
+        resources:
+          requests:
+            cpu: 10m
+            memory: 32Mi
+          limits:
+            cpu: 100m
+            memory: 64Mi
+
+      volumes:
+      - name: conf
+        emptyDir: {}
+      - name: config-map
+        configMap:
+          name: mysql-slave-config
+          defaultMode: 0755
+
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      storageClassName: nfs-client
+      resources:
+        requests:
+          storage: 10Gi
+
+
+# =============================================================================
+# 3. Service - MySQL Read (Headless for StatefulSet)
+# =============================================================================
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-read
+  namespace: gition
+spec:
+  selector:
+    app: mysql
+    role: slave
+  ports:
+  - port: 3306
+    targetPort: 3306

@@ -1,0 +1,36 @@
+services:
+  mysql:
+    volumes:
+      - db:/var/lib/mysql
+    image: mysql:8
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: ***REMOVED***
+      MYSQL_DATABASE: ian
+      MYSQL_USER: ian
+      MYSQL_PASSWORD: ***REMOVED***
+    networks:
+      - mynet-bridge-2
+  wordpress:
+    image: wordpress:latest
+    networks:
+      - mynet-bridge-2
+    depends_on:
+      - mysql
+    ports:
+      - "8585:80"
+    environment:
+      WORDPRESS_DB_HOST: mysql:3306
+      WORDPRESS_DB_USER: ian
+      WORDPRESS_DB_NAME: ian
+      WORDPRESS_DB_PASSWORD: ***REMOVED***
+  web:
+    image: nginx:1.29.3-alpine
+    ports:
+      - "8383:80"
+networks:
+  mynet-bridge-1:
+    external: true
+  mynet-bridge-2:
+    external: true
+volumes:
+  db:

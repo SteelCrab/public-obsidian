@@ -1,0 +1,127 @@
+# =============================================================================
+# [Step 7] Backend API Deployment - MySQL InnoDB Cluster 연동
+# FastAPI 백엔드가 mysql-cluster (MySQL Router)를 통해 연결
+# =============================================================================
+#
+# 선행조건: Step 5 (app-user 완료), nfs-client StorageClass, gitlab-registry Secret
+# !! 반드시 fastapi-deployment.yaml을 삭제 할 것
+#
+# 연결 정보:
+# - mysql-cluster:6446 (R/W) → Primary 연결
+# - mysql-cluster:6447 (R/O) → Secondary 연결 (로드밸런싱)
+#
+# =============================================================================
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: repos-pvc
+  namespace: gition
+spec:
+  accessModes:
+  - ReadWriteMany
+  storageClassName: nfs-client
+  resources:
+    requests:
+      storage: 5Gi
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+  namespace: gition
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      imagePullSecrets:
+      - name: gitlab-registry
+      containers:
+      - name: api
+        image: 172.100.100.8:5050/root/gition/backend:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3001
+        env:
+        # MySQL InnoDB Cluster 연결 (Router 포트)
+        - name: MYSQL_WRITE_HOST
+          value: "mysql-cluster"
+        - name: MYSQL_WRITE_PORT
+          value: "6446"
+        - name: MYSQL_READ_HOST
+          value: "mysql-cluster"
+        - name: MYSQL_READ_PORT
+          value: "6447"
+        - name: MYSQL_USER
+          value: "pista"
+        - name: MYSQL_DATABASE
+          value: "gition"
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: user-password
+        - name: BASE_URL
+          value: "http://gition.local"
+        - name: FRONTEND_URL
+          value: "http://gition.local"
+        - name: ALLOWED_ORIGINS
+          value: "http://gition.local,http://127.0.0.1,http://localhost"
+        # GitHub OAuth Configuration
+        - name: GITHUB_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: github-secret
+              key: client-id
+        - name: GITHUB_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: github-secret
+              key: client-secret
+        - name: REPOS_PATH
+          value: "/repos"
+        volumeMounts:
+        - name: repos-volume
+          mountPath: /repos
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3001
+          initialDelaySeconds: 30
+          periodSeconds: 60
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3001
+          initialDelaySeconds: 15
+          periodSeconds: 60
+      volumes:
+      - name: repos-volume
+        persistentVolumeClaim:
+          claimName: repos-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-svc
+  namespace: gition
+spec:
+  selector:
+    app: api
+  ports:
+  - port: 3001
+    targetPort: 3001

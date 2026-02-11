@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-lab
+spec:
+  selector:
+    matchLabels:
+      app: deploy-lab
+  replicas: 50
+  template:
+    metadata:
+      labels:
+        app: deploy-lab
+    spec:
+      containers:
+      - name: http-pod-name
+        image: python:3.12
+        command: ["/bin/bash", "-c", "echo \"<h1>$(hostname)</h1>\" > index.html; python -m http.server 8080"]
+        ports:
+        - name: http
+          containerPort: 8080

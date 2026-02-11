@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  mysql-master:
+    image: mysql:8.0
+    container_name: mysql-master
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      TZ: Asia/Seoul
+    volumes:
+      # 1. 활경 설정 파일
+      - /mnt/DATA/mysql/config/my.cnf:/etc/mysql/conf.d/my.cnf:ro
+      # 2. 데이터 영구 설정
+      - /mnt/DATA/mysql/data:/var/lib/mysql
+      # 3. 로그 저장
+      - /mnt/DATA/mysql/logs:/var/log/mysql
+      # 4. 초기 sql 파일
+      - /mnt/DATA/mysql/initdb.d:/docker-entrypoint-initdb.d
+    networks:
+      - mysql-network
+networks:
+  mysql-network:
+    driver: bridge

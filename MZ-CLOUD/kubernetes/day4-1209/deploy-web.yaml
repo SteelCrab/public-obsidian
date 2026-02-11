@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: deploy-web
+  name: deploy-web
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: deploy-web
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: deploy-web
+    spec:
+      containers:
+        - image: pyh5523/web:nginx-1.29.3-alpine-v2
+          name: web
+          ports:
+            - containerPort: 80
+          resources: {}
+status: {}

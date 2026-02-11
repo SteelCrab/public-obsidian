@@ -1,0 +1,9 @@
+# Nginx 최신 Alpine 이미지 사용 (경량화)
+FROM nginx:alpine
+
+# 80 포트 노출
+EXPOSE 80
+
+# Nginx 실행 (포그라운드 모드)
+# 설정 파일과 HTML은 ConfigMap + Volume으로 마운트
+CMD ["nginx", "-g", "daemon off;"]

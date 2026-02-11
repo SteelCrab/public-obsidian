@@ -1,0 +1,31 @@
+{
+  "items": [
+    {
+      "type": "graph",
+      "ctime": 1770095853468,
+      "title": "무제 그래프",
+      "options": {
+        "collapse-filter": false,
+        "search": "",
+        "showTags": false,
+        "showAttachments": false,
+        "hideUnresolved": false,
+        "showOrphans": true,
+        "collapse-color-groups": false,
+        "colorGroups": [],
+        "collapse-display": false,
+        "showArrow": false,
+        "textFadeMultiplier": -0.9,
+        "nodeSizeMultiplier": 1.12168402777778,
+        "lineSizeMultiplier": 1,
+        "collapse-forces": false,
+        "centerStrength": 0.518713248970312,
+        "repelStrength": 10,
+        "linkStrength": 1,
+        "linkDistance": 250,
+        "scale": 0.6945901344347017,
+        "close": false
+      }
+    }
+  ]
+}

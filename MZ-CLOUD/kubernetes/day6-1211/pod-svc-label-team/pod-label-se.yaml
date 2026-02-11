@@ -1,0 +1,51 @@
+# SE팀 파드들(web, srv, db)
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    job: web
+    team: se
+  name: pod-se-1
+spec:
+  containers:
+  - image: nginx:1.29.4-alpine
+    name: pod-se-1
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    job: srv
+    team: se
+  name: pod-se-2
+spec:
+  containers:
+  - image: nginx:1.29.4-alpine
+    name: pod-se-2
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    job: db
+    team: se
+  name: pod-se-3
+spec:
+  containers:
+  - image: nginx:1.29.4-alpine
+    name: pod-se-3
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}

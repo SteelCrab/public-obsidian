@@ -1,0 +1,15 @@
+# FastAPI ClusterIP Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastapi-service
+  labels:
+    app: fastapi-pod
+spec:
+  type: ClusterIP
+  selector:
+    app: fastapi-pod
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000

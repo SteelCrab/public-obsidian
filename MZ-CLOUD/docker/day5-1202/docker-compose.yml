@@ -1,0 +1,43 @@
+services:
+  db:
+    image: mysql:8.0.44-debian
+    volumes:
+      - db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=<YOUR_ROOT_PASSWORD>
+      - MYSQL_DATABASE=pista
+      - MYSQL_USER=pista
+      - MYSQL_PASSWORD=<YOUR_PASSWORD>
+    ports:
+      - 3306:3306
+    networks:
+      - mynet-bridge-1
+
+  wordpress:
+    image: wordpress
+    ports:
+      - 8080:80
+    environment:
+      - WORDPRESS_DB_HOST=db:3306
+      - WORDPRESS_DB_USER=pista
+      - WORDPRESS_DB_PASSWORD=<YOUR_PASSWORD>
+      - WORDPRESS_DB_NAME=pista
+    depends_on:
+      - db
+    networks:
+      - mynet-bridge-1
+
+  web:
+    image: nginx:latest
+    ports:
+      - 80:80
+    depends_on:
+      - wordpress
+    networks:
+      - mynet-bridge-1
+networks:
+  mynet-bridge-1:
+    driver: bridge
+
+volumes:
+  db:

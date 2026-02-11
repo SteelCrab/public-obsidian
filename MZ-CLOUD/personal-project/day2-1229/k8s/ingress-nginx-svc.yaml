@@ -1,0 +1,31 @@
+# Ingress-Nginx Controller Service
+# NodePort를 30080으로 고정하여 사용
+# Ingress Controller가 외부로 노출되는 진입점 설정
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ingress-nginx-controller
+  namespace: ingress-nginx
+  labels:
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/component: controller
+spec:
+  type: LoadBalancer
+  externalIPs:
+  - 172.100.100.20
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+    nodePort: 30080
+    protocol: TCP
+  - name: https
+    port: 443
+    targetPort: 443
+    nodePort: 30443      # HTTPS NodePort 고정
+    protocol: TCP
+  selector:
+    app.kubernetes.io/component: controller
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/name: ingress-nginx

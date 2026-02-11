@@ -1,0 +1,108 @@
+# Frontend (React + Nginx) Deployment
+# ConfigMap으로 nginx 설정 오버라이드
+# Ingress가 라우팅 담당하므로 nginx는 정적 파일만 서빙
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  namespace: gition
+data:
+  default.conf: |
+    server {
+        listen 80;
+        server_name localhost;
+        root /usr/share/nginx/html;
+        index index.html;
+        charset utf-8;
+
+        gzip on;
+        gzip_vary on;
+        gzip_min_length 1024;
+        gzip_proxied expired no-cache no-store private auth;
+        gzip_types text/plain text/css text/xml text/javascript application/x-javascript application/xml application/javascript;
+
+        location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+            expires 1y;
+            add_header Cache-Control "public, immutable";
+        }
+
+        location /health {
+            return 200 'OK';
+            add_header Content-Type text/plain;
+        }
+
+        location / {
+            try_files $uri $uri/ /index.html;
+        }
+
+        add_header X-Frame-Options "SAMEORIGIN" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header X-XSS-Protection "1; mode=block" always;
+    }
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: gition
+  labels:
+    app: frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      imagePullSecrets:
+      - name: gitlab-registry
+      containers:
+      - name: frontend
+        image: 172.100.100.8:5050/root/gition/frontend:latest
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: nginx-config
+          mountPath: /etc/nginx/conf.d/default.conf
+          subPath: default.conf
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 200m
+            memory: 256Mi
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 3
+          periodSeconds: 5
+      volumes:
+      - name: nginx-config
+        configMap:
+          name: nginx-config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-svc
+  namespace: gition
+spec:
+  selector:
+    app: frontend
+  ports:
+  - port: 80
+    targetPort: 80

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyHome</title>
+    <style>
+        .parent {
+            position: relative;
+            /* 자식 요소의 기준점이 됨 */
+            width: 100vw;
+            height: 100vh;
+            border: 1px solid black;
+        }
+
+        .child {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            /* 자기 자신의 절반만큼 이동하여 중앙 정렬 */
+            width: 50%;
+            /* 예시 너비 */
+            height: 30%;
+            /* 예시 높이 */
+            background-color: lightcoral;
+            justify-content: center;
+            /* 수평 중앙 정렬 */
+            display: flex;
+            align-items: center;
+            /* 수직 중앙 정렬 */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="parent">
+        <div class="child">
+            MyHome
+        </div>
+    </div>
+</body>
+
+</html>

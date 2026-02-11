@@ -1,0 +1,84 @@
+# 1. Pod-1 (pvc-1 사용)
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-1
+spec:
+  containers:
+    - name: nginx
+      image: nginx:alpine
+      volumeMounts:
+        - name: my-vol
+          mountPath: /usr/share/nginx/html
+  volumes:
+  - name: my-vol
+    persistentVolumeClaim:
+      claimName: pvc-1
+---
+# 2. Pod-2 (pvc-2 사용)
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-2
+spec:
+  containers:
+    - name: nginx
+      image: nginx:alpine
+      volumeMounts:
+        - name: my-vol
+          mountPath: /usr/share/nginx/html
+  volumes:
+  - name: my-vol
+    persistentVolumeClaim:
+      claimName: pvc-2
+---
+# 3. Pod-3 (pvc-3 사용)
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-3
+spec:
+  containers:
+    - name: nginx
+      image: nginx:alpine
+      volumeMounts:
+        - name: my-vol
+          mountPath: /usr/share/nginx/html
+  volumes:
+  - name: my-vol
+    persistentVolumeClaim:
+      claimName: pvc-3
+---
+# 4. Pod-4 (pvc-4 사용)
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-4
+spec:
+  containers:
+    - name: nginx
+      image: nginx:alpine
+      volumeMounts:
+        - name: my-vol
+          mountPath: /usr/share/nginx/html
+  volumes:
+  - name: my-vol
+    persistentVolumeClaim:
+      claimName: pvc-4
+---
+# 5. Pod-5 (pvc-5 사용)
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-5
+spec:
+  containers:
+    - name: nginx
+      image: nginx:alpine
+      volumeMounts:
+        - name: my-vol
+          mountPath: /usr/share/nginx/html
+  volumes:
+  - name: my-vol
+    persistentVolumeClaim:
+      claimName: pvc-5

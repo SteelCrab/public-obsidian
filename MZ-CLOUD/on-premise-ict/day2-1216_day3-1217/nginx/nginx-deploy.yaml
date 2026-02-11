@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deploy
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      imagePullSecrets:
+        - name: gitlab-registry-secret
+      containers:
+        - name: nginx-container
+          image: registry.gitlab.com/pyh5523/pista-megazoncloud/nginx:latest
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: nginx-conf
+              mountPath: /etc/nginx/conf.d
+            - name: nginx-html
+              mountPath: /usr/share/nginx/html
+      volumes:
+        - name: nginx-conf
+          configMap:
+            name: nginx-config
+            items:
+              - key: default.conf
+                path: default.conf
+        - name: nginx-html
+          configMap:
+            name: nginx-config
+            items:
+              - key: index.html
+                path: index.html

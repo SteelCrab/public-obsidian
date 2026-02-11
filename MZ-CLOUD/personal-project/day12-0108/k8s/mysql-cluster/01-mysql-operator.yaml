@@ -1,0 +1,22 @@
+# =============================================================================
+# [Step 1] MySQL Operator for Kubernetes 설치
+# Oracle 공식 MySQL Operator
+# =============================================================================
+#
+# 선행조건: 없음 (Kubernetes 클러스터만 필요)
+#
+# 설치 명령 (Helm 사용):
+# helm repo add mysql-operator https://mysql.github.io/mysql-operator/
+# helm repo update
+# helm install mysql-operator mysql-operator/mysql-operator --namespace mysql-operator --create-namespace
+#
+# 또는 kubectl 직접 설치:
+# kubectl apply -f https://raw.githubusercontent.com/mysql/mysql-operator/trunk/deploy/deploy-crds.yaml
+# kubectl apply -f https://raw.githubusercontent.com/mysql/mysql-operator/trunk/deploy/deploy-operator.yaml
+#
+# =============================================================================
+
+# Operator가 설치되면 아래 CRD들이 사용 가능:
+# - InnoDBCluster
+# - MySQLBackup
+# - MySQLBackupSchedule

@@ -1,0 +1,2 @@
+- [[AmazonLinux]] - Amazon Linux 설치
+- [[Ubuntu]] - Ubuntu 설치

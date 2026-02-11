@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deploy
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      imagePullSecrets:
+        - name: gitlab-registry-secret
+      containers:
+        - name: nginx-container
+          image: registry.gitlab.com/pyh5523/pista-megazoncloud/nginx:latest
+          ports:
+            - containerPort: 80

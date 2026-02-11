@@ -1,0 +1,13 @@
+# 여러개의 컨테이너를 하나의 서비스로 정의하고 구성해 하나로 묶어 관리할 수 있는 하나의 애플리케이션을 만드는 것
+# 버전 확인
+docker compose version
+# 설치가 되어있지 않을 경우
+sudo apt install docker-compose-plugin
+# 버전 업데이트
+DOCKER_CONFIG=${DOCKER_CONFIG:-$HOME/.docker}
+mkdir -p $DOCKER_CONFIG/cli-plugins
+curl -SL https://github.com/docker/compose/releases/download/v2.40.3/docker-compose-linux-x86_64 -o $DOCKER_CONFIG/cli-plugins/docker-compose
+# 생성된 도커컴포즈에 실행 권한 부여
+chmod +x $DOCKER_CONFIG/cli-plugins/docker-compose
+# 버전 확인
+docker compose version

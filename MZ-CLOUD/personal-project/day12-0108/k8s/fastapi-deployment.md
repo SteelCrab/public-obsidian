@@ -1,0 +1,1 @@
+../../day11-0107/k8s/fastapi-deployment.md

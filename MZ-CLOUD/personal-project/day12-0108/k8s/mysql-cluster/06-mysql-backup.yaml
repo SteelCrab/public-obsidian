@@ -1,0 +1,103 @@
+# =============================================================================
+# [Step 6] MySQL InnoDB Cluster - 자동 백업 CronJob
+# NFS에 mysqldump 저장 (매일 02:00)
+# =============================================================================
+#
+# 선행조건: Step 4 (innodb-cluster), nfs-client StorageClass
+#
+# =============================================================================
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-backup-pvc
+  namespace: gition
+spec:
+  accessModes:
+  - ReadWriteMany
+  storageClassName: nfs-client
+  resources:
+    requests:
+      storage: 20Gi
+
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: mysql-backup
+  namespace: gition
+spec:
+  # 매일 02:00 (KST, UTC로는 17:00 전날)
+  schedule: "0 17 * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 86400  # 1일 후 Job 정리
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: mysql-backup
+            image: mysql:8.0
+            env:
+            - name: MYSQL_HOST
+              value: "mysql-cluster"
+            - name: MYSQL_PORT
+              value: "6446"
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-cluster-secret
+                  key: rootPassword
+            - name: BACKUP_DIR
+              value: "/backup"
+            command:
+            - bash
+            - -c
+            - |
+              set -e
+              
+              # 백업 파일명 (날짜 포함)
+              DATE=$(date +%Y%m%d_%H%M%S)
+              BACKUP_FILE="${BACKUP_DIR}/gition_${DATE}.sql"
+              
+              echo "[Backup] Starting MySQL backup at $(date)"
+              echo "[Backup] Target: ${MYSQL_HOST}:${MYSQL_PORT}"
+              
+              # mysqldump 실행
+              mysqldump -h ${MYSQL_HOST} -P ${MYSQL_PORT} -uroot -p"${MYSQL_ROOT_PASSWORD}" \
+                --single-transaction \
+                --routines \
+                --triggers \
+                --all-databases \
+                > ${BACKUP_FILE}
+              
+              # 압축
+              gzip ${BACKUP_FILE}
+              
+              echo "[Backup] Backup completed: ${BACKUP_FILE}.gz"
+              echo "[Backup] Size: $(ls -lh ${BACKUP_FILE}.gz | awk '{print $5}')"
+              
+              # 7일 이상 오래된 백업 삭제
+              echo "[Backup] Cleaning old backups (older than 7 days)..."
+              find ${BACKUP_DIR} -name "*.sql.gz" -mtime +7 -delete
+              
+              echo "[Backup] Current backups:"
+              ls -lh ${BACKUP_DIR}/*.sql.gz 2>/dev/null || echo "No backups found"
+              
+              echo "[Backup] Done at $(date)"
+            volumeMounts:
+            - name: backup-volume
+              mountPath: /backup
+            resources:
+              requests:
+                cpu: 100m
+                memory: 256Mi
+              limits:
+                cpu: 500m
+                memory: 512Mi
+          volumes:
+          - name: backup-volume
+            persistentVolumeClaim:
+              claimName: mysql-backup-pvc

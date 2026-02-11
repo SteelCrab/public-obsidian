@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-init-config-1
+data:
+  init.sql: |
+    -- ⚠️ 데이터베이스명은 mysql-secret의 MYSQL_DATABASE와 동일해야 함 
+    -- Secret에서 사용자/DB가 자동 생성되므로 여기서는 테이블만 생성
+    
+    -- pista_db 사용 (Secret의 MYSQL_DATABASE와 동일)
+    USE pista_db;
+    
+    -- tmember 테이블 생성
+    CREATE TABLE IF NOT EXISTS tmember (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      user_id VARCHAR(50) NOT NULL,
+      name VARCHAR(100) NOT NULL,
+      email VARCHAR(100),
+      phone VARCHAR(20),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    
+    -- 샘플 데이터 삽입
+    INSERT INTO tmember (user_id, name, email, phone) VALUES 
+      ('hong123', '홍길동', 'hong@example.com', '010-1234-5678'),
+      ('kim456', '김철수', 'kim@example.com', '010-2345-6789'),
+      ('lee789', '이영희', 'lee@example.com', '010-3456-7890');
+---
+# MySQL 설정 ConfigMap (UTF-8 설정)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-init-config-2
+data:
+  # MySQL 서버 설정 파일
+  # /etc/mysql/conf.d/my-custom.cnf에 마운트
+  my-custom.cnf: |
+    [mysqld]
+    # 문자셋을 UTF-8로 설정 (한글 지원)
+    character-set-server=utf8mb4
+    collation-server=utf8mb4_unicode_ci

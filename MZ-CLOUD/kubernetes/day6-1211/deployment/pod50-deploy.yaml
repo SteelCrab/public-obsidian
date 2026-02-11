@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-app
+spec:
+  selector:
+    matchLabels:
+      app: pod-app
+  replicas: 50 # 생성 및 유지 할 파드의 개수 
+  template:
+    metadata:
+      labels:
+        app: pod-app
+    spec:
+      containers:
+      - name: cont-app
+        image: pyh5523/web:nginx-1.29.3-alpine-v2
+        ports:
+        - containerPort: 80
+
+

@@ -1,0 +1,250 @@
+{
+  "main": {
+    "id": "adabf088d0b6f385",
+    "type": "split",
+    "children": [
+      {
+        "id": "a7a7cb9aaadde4c7",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "2544a81ceea4d893",
+            "type": "leaf",
+            "state": {
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "그래프 뷰"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "091c0910314c2450",
+    "type": "split",
+    "children": [
+      {
+        "id": "ca9e90f5dcae1794",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "e760368e1c35e328",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "byModifiedTime",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "파일 탐색기"
+            }
+          },
+          {
+            "id": "244fd4b050562c8b",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": true,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "검색"
+            }
+          },
+          {
+            "id": "493a706d98e76198",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "북마크"
+            }
+          },
+          {
+            "id": "1d9cd6cd3abcaa7b",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "MZ-CLOUD/GCP/process.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "process 의 개요"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 200
+  },
+  "right": {
+    "id": "cd98b5b886d120da",
+    "type": "split",
+    "children": [
+      {
+        "id": "fc7013fa587d5623",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "6fafbc96a06d8d74",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "MZ-CLOUD/cicd/CICD_2026-02-06.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "CICD_2026-02-06 의 백링크"
+            }
+          },
+          {
+            "id": "c39c7f34303e624e",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "무제.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "무제 의 나가는 링크"
+            }
+          },
+          {
+            "id": "53cb64671d4fbc35",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "태그"
+            }
+          },
+          {
+            "id": "27818d48a03f7b01",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "모든 속성"
+            }
+          },
+          {
+            "id": "a9c5dd1f196b3194",
+            "type": "leaf",
+            "pinned": true,
+            "state": {
+              "type": "graph",
+              "state": {},
+              "pinned": true,
+              "icon": "lucide-git-fork",
+              "title": "그래프 뷰"
+            }
+          }
+        ],
+        "currentTab": 4
+      }
+    ],
+    "direction": "horizontal",
+    "width": 804.5
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:빠른 전환기 열기": false,
+      "graph:그래프 뷰 열기": false,
+      "canvas:새 캔버스 만들기": false,
+      "daily-notes:오늘의 일일 노트 열기": false,
+      "templates:템플릿 삽입": false,
+      "command-palette:명령어 팔레트 열기": false,
+      "bases:새 베이스 생성하기": false,
+      "obsidian-git:Open Git source control": false,
+      "table-editor-obsidian:Advanced Tables Toolbar": false
+    }
+  },
+  "active": "a9c5dd1f196b3194",
+  "lastOpenFiles": [
+    "한글.txt",
+    "스크린샷 2026-02-11 오후 2.09.02.png",
+    "eks_install_mac.sh",
+    "eks_install_linux.sh",
+    "eks-fastapi-arch.png",
+    "eks-cluster-init.yaml",
+    "aws-iam.md",
+    "architecture-visualizer/assets/templates/gcp-lb-tree-template.html",
+    "architecture-visualizer/assets/templates/eks-cicd-template.html",
+    "architecture-visualizer/assets/templates",
+    "architecture-visualizer/assets",
+    "architecture-visualizer/SKILL.md",
+    "architecture-visualizer.skill",
+    "MZ-CLOUD/rust/rust-vector.md",
+    "MZ-CLOUD/rust/rust-variables.md",
+    "MZ-CLOUD/rust/rust-unsafe.md",
+    "MZ-CLOUD/rust/rust-traits.md",
+    "MZ-CLOUD/rust/rust-trait-bounds.md",
+    "MZ-CLOUD/rust/rust-threads.md",
+    "MZ-CLOUD/rust/rust-struct.md",
+    "MZ-CLOUD/rust/rust-string.md",
+    "MZ-CLOUD/rust/rust-string-iter.md",
+    "MZ-CLOUD/rust/rust-smart-pointers.md",
+    "MZ-CLOUD/rust/rust-slice.md",
+    "MZ-CLOUD/rust/rust-result.md",
+    "MZ-CLOUD/rust/rust-result-handling.md",
+    "MZ-CLOUD/rust/rust-pattern-matching.md",
+    "MZ-CLOUD/rust/rust-panic.md",
+    "MZ-CLOUD/rust/rust-ownership.md",
+    "MZ-CLOUD/rust/rust-option.md",
+    "MZ-CLOUD/rust/rust-mutex.md",
+    "MZ-CLOUD/rust/rust-modules.md",
+    "MZ-CLOUD/rust/rust-macros.md",
+    "MZ-CLOUD/rust/rust-lifetimes.md",
+    "MZ-CLOUD/rust/rust-iterators.md",
+    "MZ-CLOUD/rust/rust-iterator-adapters.md",
+    "MZ-CLOUD/rust",
+    "MZ-CLOUD/python/day1-1112/python",
+    "MZ-CLOUD/kubernetes/day4-1209/spa-web/assets/img/team/3.jpg",
+    "MZ-CLOUD/kubernetes/day4-1209/spa-web/assets/img/team/2.jpg",
+    "MZ-CLOUD/kubernetes/day4-1209/spa-web/assets/img/team/1.jpg",
+    "MZ-CLOUD/kubernetes/day4-1209/spa-web/assets/img/portfolio/6.jpg",
+    "MZ-CLOUD/kubernetes/day4-1209/spa-web/assets/img/portfolio/5.jpg",
+    "MZ-CLOUD/kubernetes/day4-1209/spa-web/assets/img/portfolio/4.jpg",
+    "MZ-CLOUD/kubernetes/day4-1209/spa-web/assets/img/portfolio/3.jpg",
+    "MZ-CLOUD/kubernetes/day4-1209/spa-web/assets/img/portfolio/2.jpg",
+    "무제 2.canvas",
+    "무제 1.canvas",
+    "무제.canvas",
+    "무제 4.canvas",
+    "무제 3.canvas"
+  ]
+}

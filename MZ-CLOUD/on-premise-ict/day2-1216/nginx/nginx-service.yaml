@@ -1,0 +1,15 @@
+# Nginx LoadBalancer Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc
+  labels:
+    app: nginx
+spec:
+  type: LoadBalancer
+  selector:
+    app: nginx
+  ports:
+    - protocol: TCP
+      port: 80       
+      targetPort: 80 

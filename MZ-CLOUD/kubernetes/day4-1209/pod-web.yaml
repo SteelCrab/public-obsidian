@@ -1,0 +1,13 @@
+# pod-web.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-web
+  labels:
+    app: web
+spec:
+  containers:
+    - name: web-container
+      image: pyh5523/web:nginx-1.29.3-alpine
+      ports:
+        - containerPort: 80

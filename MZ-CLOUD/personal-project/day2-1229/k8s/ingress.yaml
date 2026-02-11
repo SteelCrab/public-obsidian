@@ -1,0 +1,54 @@
+# Ingress - Path-based routing
+# Ingress가 라우팅 규칙 정의
+# /api/* -> FastAPI (Backend)
+# /auth/* -> FastAPI (Backend)
+# /* -> React (Frontend)
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gition-ingress
+  namespace: gition
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: gition.local
+    http:
+      paths:
+      # Backend API - /api/* 경로는 api-svc로 라우팅
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: api-svc
+            port:
+              number: 3001
+      # Auth - /auth/github는 api-svc로 라우팅 (OAuth 처리)
+      # /auth/callback은 frontend가 처리 (catch-all로 포함됨)
+      - path: /auth/github
+        pathType: Prefix
+        backend:
+          service:
+            name: api-svc
+            port:
+              number: 3001
+      # Health check
+      - path: /health
+        pathType: Exact
+        backend:
+          service:
+            name: api-svc
+            port:
+              number: 3001
+      # Frontend (catch-all) - 나머지 요청은 frontend-svc로
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: frontend-svc
+            port:
+              number: 80

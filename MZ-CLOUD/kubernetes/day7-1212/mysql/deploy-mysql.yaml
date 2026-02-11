@@ -1,0 +1,54 @@
+# MySQL Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-mysql
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - name: con-mysql
+        image: mysql:8.0.44-debian
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: secret-mysql
+              key: mysql-root-password
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: secret-mysql
+              key: mysql-user-id
+        - name: MYSQL_USER_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: secret-mysql
+              key: mysql-user-password
+        - name: MYSQL_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: secret-mysql
+              key: mysql-database-name
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        - name: mysql-storage
+          mountPath: /var/lib/mysql
+        # - name: initdb # mysql 초기화 
+        #   mountPath: /docker-entrypoint-initdb.d
+      
+      volumes:
+      - name: mysql-storage
+        persistentVolumeClaim:
+          claimName: pvc-mysql
+      - name: initdb
+        # configMap:
+        #   name: mysql-initdb

@@ -1,0 +1,217 @@
+# MySQL All-in-One YAML for Namespace: mysql
+# 
+# 배포 방법:
+#   1. .env 파일 생성 (cp .env.example .env)
+#   2. .env 파일 수정 (실제 값 입력)
+#   3. set -a && source .env && set +a && envsubst < mysql.yaml | kubectl apply -f -
+
+---
+# Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: 2tier-mysql
+
+---
+# ConfigMap - init.sql (테이블 생성용)
+# ⚠️ Secret에서 사용자/DB 자동 생성되므로 여기서는 테이블만 생성
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-init-config-1
+  namespace: 2tier-mysql
+data:
+  init.sql: |
+    -- ⚠️ Secret의 MYSQL_DATABASE와 동일한 DB명 사용
+    USE `${MYSQL_DATABASE}`;
+    
+    -- WordPress용 데이터베이스 및 권한 생성
+    CREATE DATABASE IF NOT EXISTS `${WORDPRESS_DB_NAME}`;
+    GRANT ALL PRIVILEGES ON `${WORDPRESS_DB_NAME}`.* TO '${MYSQL_USER}'@'%';
+    FLUSH PRIVILEGES;
+    
+    -- 문자셋 설정 (한글 깨짐 방지)
+    SET NAMES utf8mb4;
+    
+    -- tmember 테이블 생성
+    CREATE TABLE IF NOT EXISTS tmember (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      user_id VARCHAR(50) NOT NULL,
+      name VARCHAR(100) NOT NULL,
+      email VARCHAR(100),
+      phone VARCHAR(20),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    
+    -- 샘플 데이터 삽입
+    INSERT INTO tmember (user_id, name, email, phone) VALUES 
+      ('hong123', '홍길동', 'hong@example.com', '010-1234-5678'),
+      ('kim456', '김철수', 'kim@example.com', '010-2345-6789'),
+      ('lee789', '이영희', 'lee@example.com', '010-3456-7890');
+
+---
+# ConfigMap - MySQL 설정 (UTF-8)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-init-config-2
+  namespace: 2tier-mysql
+data:
+  my-custom.cnf: |
+    [mysqld]
+    # 문자셋을 UTF-8로 설정 (한글 지원)
+    character-set-server=utf8mb4
+    collation-server=utf8mb4_unicode_ci
+
+---
+# Secret - MySQL 인증정보
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql-secret
+  namespace: 2tier-mysql
+type: Opaque
+stringData:
+  MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+  MYSQL_USER: "${MYSQL_USER}"
+  MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+  MYSQL_DATABASE: "${MYSQL_DATABASE}"
+
+---
+# Secret - GitLab Container Registry 인증
+# 
+# 토큰 생성 방법:
+#   1. GitLab → Settings → Access Tokens
+#   2. 권한: read_registry (이미지 Pull용)
+#   3. 토큰 복사 (glpat-...)
+#
+# .dockerconfigjson 값 생성:
+#   kubectl create secret docker-registry temp \
+#     --docker-server=registry.gitlab.com \
+#     --docker-username=<GITLAB_USERNAME> \
+#     --docker-password=<GITLAB_PAT_TOKEN> \
+#     --dry-run=client -o yaml | grep .dockerconfigjson
+#
+# 또는 기존 namespace에서 복사:
+#   kubectl get secret gitlab-registry-secret -n default -o yaml | \
+#     sed 's/namespace: default/namespace: mysql/' | kubectl apply -f -
+apiVersion: v1
+kind: Secret
+metadata:
+  name: gitlab-registry-secret
+  namespace: 2tier-mysql
+type: kubernetes.io/dockerconfigjson
+data:
+  .dockerconfigjson: ${DOCKER_CONFIG_JSON_BASE64}
+
+---
+# PersistentVolume (Cluster-scoped, namespace 없음)
+# ⚠️ 다른 PV와 이름/경로 충돌 주의!
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: 2tier-mysql-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: /data/2tier/mysql
+
+---
+# PersistentVolumeClaim
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pvc
+  namespace: 2tier-mysql
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-deployment
+  namespace: 2tier-mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      imagePullSecrets:
+        - name: gitlab-registry-secret
+      containers:
+      - name: mysql
+        image: registry.gitlab.com/pyh5523/pista-megazoncloud/2tier-mysql:latest
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: MYSQL_ROOT_PASSWORD
+        - name: MYSQL_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: MYSQL_DATABASE
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: MYSQL_USER
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: MYSQL_PASSWORD
+        volumeMounts:
+        # MySQL 데이터 저장 경로 (PVC 사용)
+        - name: mysql-storage
+          mountPath: /var/lib/mysql
+        # 초기화 스크립트 (init.sql)
+        - name: mysql-init
+          mountPath: /docker-entrypoint-initdb.d
+        # MySQL 설정 파일 (UTF-8 설정)
+        - name: mysql-config-vol
+          mountPath: /etc/mysql/conf.d
+          readOnly: true
+      volumes:
+      - name: mysql-storage
+        persistentVolumeClaim:
+          claimName: mysql-pvc
+      - name: mysql-init
+        configMap:
+          name: mysql-init-config-1
+      - name: mysql-config-vol
+        configMap:
+          name: mysql-init-config-2
+
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service
+  namespace: 2tier-mysql
+spec:
+  type: ClusterIP
+  selector:
+    app: mysql
+  ports:
+  - port: 3306
+    targetPort: 3306

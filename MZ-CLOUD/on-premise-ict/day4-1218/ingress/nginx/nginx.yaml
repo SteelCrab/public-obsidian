@@ -1,0 +1,178 @@
+# Nginx All-in-One YAML for Multi-Color Ingress Lab
+
+---
+# Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ingress
+
+---
+# Secret - GitLab Container Registry 인증
+apiVersion: v1
+kind: Secret
+metadata:
+  name: gitlab-registry-secret
+  namespace: ingress
+type: kubernetes.io/dockerconfigjson
+data:
+  .dockerconfigjson: ${DOCKER_CONFIG_JSON_BASE64}
+
+---
+# Deployment 1 (red)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deploy-1
+  namespace: ingress
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-1
+  template:
+    metadata:
+      labels:
+        app: nginx-1
+    spec:
+      imagePullSecrets:
+        - name: gitlab-registry-secret
+      containers:
+      - name: nginx-container
+        image: registry.gitlab.com/pyh5523/pista-megazoncloud/ingress-nginx-1:latest
+        ports:
+        - containerPort: 80
+
+---
+# Service 1 (red)
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc-1
+  namespace: ingress
+spec:
+  type: ClusterIP 
+  selector:
+    app: nginx-1
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+
+---
+# Deployment 2 (Green)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deploy-2
+  namespace: ingress
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-2
+  template:
+    metadata:
+      labels:
+        app: nginx-2
+    spec:
+      imagePullSecrets:
+        - name: gitlab-registry-secret
+      containers:
+      - name: nginx-container
+        image: registry.gitlab.com/pyh5523/pista-megazoncloud/ingress-nginx-2:latest
+        ports:
+        - containerPort: 80
+
+---
+# Service 2 (green)
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc-2
+  namespace: ingress
+spec:
+  type: ClusterIP 
+  selector:
+    app: nginx-2
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+
+---
+# Deployment 3 (Blue)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deploy-3
+  namespace: ingress
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-3
+  template:
+    metadata:
+      labels:
+        app: nginx-3
+    spec:
+      imagePullSecrets:
+        - name: gitlab-registry-secret
+      containers:
+      - name: nginx-container
+        image: registry.gitlab.com/pyh5523/pista-megazoncloud/ingress-nginx-3:latest
+        ports:
+        - containerPort: 80
+
+---
+# Service 3 (blue)
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc-3
+  namespace: ingress
+spec:
+  type: ClusterIP 
+  selector:
+    app: nginx-3
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+
+---
+# Ingress (Unified)
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress
+  namespace: ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: nginx-svc-1
+                port:
+                  number: 80
+          - pathType: Prefix
+            path: /green
+            backend:
+              service:
+                name: nginx-svc-2
+                port:
+                  number: 80
+          - pathType: Prefix
+            path: /blue
+            backend:
+              service:
+                name: nginx-svc-3
+                port:
+                  number: 80

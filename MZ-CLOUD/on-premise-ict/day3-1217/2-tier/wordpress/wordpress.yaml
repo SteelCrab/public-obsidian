@@ -1,0 +1,131 @@
+# Namespace
+# cmd : kubectl create namespace wordpress
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: 2tier-wordpress
+
+---
+# Secret - WordPress 설정
+apiVersion: v1
+kind: Secret
+metadata:
+  name: wordpress-secret
+  namespace: 2tier-wordpress
+type: Opaque
+stringData:
+  # MySQL Service (namespace 포함)
+  # 형식: <서비스명>.<네임스페이스>
+  WORDPRESS_DB_HOST: "mysql-service.2tier-mysql"
+  WORDPRESS_DB_USER: "${WORDPRESS_DB_USER}"
+  WORDPRESS_DB_PASSWORD: "${WORDPRESS_DB_PASSWORD}"
+  WORDPRESS_DB_NAME: "${WORDPRESS_DB_NAME}"
+
+---
+# Secret - GitLab Container Registry 인증 (WordPress용)
+apiVersion: v1
+kind: Secret
+metadata:
+  name: gitlab-registry-secret
+  namespace: 2tier-wordpress
+type: kubernetes.io/dockerconfigjson
+data:
+  .dockerconfigjson: ${DOCKER_CONFIG_JSON_BASE64}
+
+---
+# PersistentVolume (Cluster-scoped)
+# WordPress 파일 영구 저장용
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: 2tier-wordpress-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: /data/2tier/wordpress
+
+---
+# PersistentVolumeClaim
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: wordpress-pvc
+  namespace: 2tier-wordpress
+spec:
+  accessModes:
+    - ReadWriteMany 
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wordpress-deployment
+  namespace: 2tier-wordpress
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: wordpress
+  template:
+    metadata:
+      labels:
+        app: wordpress
+    spec:
+      imagePullSecrets:
+        - name: gitlab-registry-secret
+      containers:
+      - name: wordpress
+        image: registry.gitlab.com/pyh5523/pista-megazoncloud/2tier-wordpress:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: WORDPRESS_DB_HOST
+          valueFrom:
+            secretKeyRef:
+              name: wordpress-secret
+              key: WORDPRESS_DB_HOST
+        - name: WORDPRESS_DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: wordpress-secret
+              key: WORDPRESS_DB_USER
+        - name: WORDPRESS_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: wordpress-secret
+              key: WORDPRESS_DB_PASSWORD
+        - name: WORDPRESS_DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: wordpress-secret
+              key: WORDPRESS_DB_NAME
+        volumeMounts:
+        - name: wordpress-persistent-storage
+          mountPath: /var/www/html
+      volumes:
+      - name: wordpress-persistent-storage
+        persistentVolumeClaim:
+          claimName: wordpress-pvc
+
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: wordpress-service
+  namespace: 2tier-wordpress
+spec:
+  type: LoadBalancer
+  selector:
+    app: wordpress
+  ports:
+  - port: 80
+    targetPort: 80

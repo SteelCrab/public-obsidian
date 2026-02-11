@@ -1,0 +1,167 @@
+# =============================================================================
+# NFS Client Provisioner
+# =============================================================================
+# Kubernetes에서 PVC 요청 시 NFS 볼륨을 동적으로 프로비저닝하는 컴포넌트
+# 일반적으로 Helm으로 설치 (helm install nfs-provisioner nfs-subdir-external-provisioner/...)
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# 1. ServiceAccount
+# -----------------------------------------------------------------------------
+# Provisioner Pod가 K8s API와 통신하기 위한 계정
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: nfs-client-provisioner
+  namespace: kube-system    # kube-system 네임스페이스에 배포
+# -----------------------------------------------------------------------------
+# 2. ClusterRole - 클러스터 레벨 권한
+# -----------------------------------------------------------------------------
+# Provisioner가 PV/PVC를 관리하기 위해 필요한 권한
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: nfs-client-provisioner-runner
+rules:
+  # 노드 목록 조회 (볼륨 마운트 관련)
+  - apiGroups: [""]
+    resources: ["nodes"]
+    verbs: ["get", "list", "watch"]
+  # PersistentVolume 생성/삭제 (핵심 기능)
+  - apiGroups: [""]
+    resources: ["persistentvolumes"]
+    verbs: ["get", "list", "watch", "create", "delete"]
+  # PersistentVolumeClaim 조회/업데이트
+  - apiGroups: [""]
+    resources: ["persistentvolumeclaims"]
+    verbs: ["get", "list", "watch", "update"]
+  # StorageClass 조회
+  - apiGroups: ["storage.k8s.io"]
+    resources: ["storageclasses"]
+    verbs: ["get", "list", "watch"]
+  # 이벤트 생성 (로그용)
+  - apiGroups: [""]
+    resources: ["events"]
+    verbs: ["create", "update", "patch"]
+
+# -----------------------------------------------------------------------------
+# 3. ClusterRoleBinding - ServiceAccount와 ClusterRole 연결
+# -----------------------------------------------------------------------------
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: run-nfs-client-provisioner
+subjects:
+  - kind: ServiceAccount
+    name: nfs-client-provisioner
+    namespace: kube-system
+roleRef:
+  kind: ClusterRole
+  name: nfs-client-provisioner-runner
+  apiGroup: rbac.authorization.k8s.io
+
+# -----------------------------------------------------------------------------
+# 4. Role - 리더 선출용 (고가용성)
+# -----------------------------------------------------------------------------
+# 여러 Provisioner 인스턴스가 리더 선출을 위해 endpoints 락을 사용
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: leader-locking-nfs-client-provisioner
+  namespace: kube-system
+rules:
+  - apiGroups: [""]
+    resources: ["endpoints"]
+    verbs: ["get", "list", "watch", "create", "update", "patch"]
+
+# -----------------------------------------------------------------------------
+# 5. RoleBinding
+# -----------------------------------------------------------------------------
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: leader-locking-nfs-client-provisioner
+  namespace: kube-system
+subjects:
+  - kind: ServiceAccount
+    name: nfs-client-provisioner
+    namespace: kube-system
+roleRef:
+  kind: Role
+  name: leader-locking-nfs-client-provisioner
+  apiGroup: rbac.authorization.k8s.io
+
+# -----------------------------------------------------------------------------
+# 6. Deployment - NFS Provisioner Pod
+# -----------------------------------------------------------------------------
+# PVC 요청이 들어오면 NFS 서버에 디렉토리를 생성하고 PV를 동적 생성
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nfs-client-provisioner
+  namespace: kube-system
+  labels:
+    app: nfs-client-provisioner
+spec:
+  replicas: 1                   # 단일 인스턴스 (리더 선출로 HA 가능)
+  strategy:
+    type: Recreate              # 기존 Pod 종료 후 새 Pod 생성
+  selector:
+    matchLabels:
+      app: nfs-client-provisioner
+  template:
+    metadata:
+      labels:
+        app: nfs-client-provisioner
+    spec:
+      serviceAccountName: nfs-client-provisioner
+      containers:
+        - name: nfs-client-provisioner
+          # 공식 이미지 (registry.k8s.io)
+          image: registry.k8s.io/sig-storage/nfs-subdir-external-provisioner:v4.0.2
+          volumeMounts:
+            - name: nfs-client-root
+              mountPath: /persistentvolumes    # NFS가 마운트될 경로
+          env:
+            # Provisioner 이름 (StorageClass에서 참조)
+            - name: PROVISIONER_NAME
+              value: k8s-sigs.io/nfs-subdir-external-provisioner
+            # 실제 NFS 서버 IP - 환경에 맞게 수정
+            - name: NFS_SERVER
+              value: 172.100.100.10
+            # 실제 NFS 공유 경로 - 환경에 맞게 수정
+            - name: NFS_PATH
+              value: /mnt/DATA
+      volumes:
+        - name: nfs-client-root
+          nfs:
+            server: 172.100.100.10    # 실제 NFS 서버 IP
+            path: /mnt/DATA           # 실제 NFS 공유 경로
+# -----------------------------------------------------------------------------
+# 7. StorageClass - PVC에서 사용
+# -----------------------------------------------------------------------------
+# PVC 생성 시 storageClassName: nfs-client 로 사용
+# is-default-class: true로 설정하여 기본 StorageClass로 지정
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: nfs-client
+  annotations:
+    # 기본 StorageClass로 설정 (PVC에 storageClassName 없으면 이거 사용)
+    storageclass.kubernetes.io/is-default-class: "true"
+# Provisioner 이름 (Deployment의 PROVISIONER_NAME과 일치)
+provisioner: k8s-sigs.io/nfs-subdir-external-provisioner
+parameters:
+  # PVC 삭제 시 폴더를 보존할지 여부 (false=삭제됨, true=archived-* 이름으로 보존)
+  archiveOnDelete: "false"
+# 회수 정책: Delete=PVC 삭제시 PV도 삭제, Retain=PV 보존
+reclaimPolicy: Delete
+# 볼륨 바인딩 모드: Immediate=즉시, WaitForFirstConsumer=Pod 생성 시
+volumeBindingMode: Immediate

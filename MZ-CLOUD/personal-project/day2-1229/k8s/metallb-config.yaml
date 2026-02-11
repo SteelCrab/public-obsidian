@@ -1,0 +1,22 @@
+# MetalLB Configuration
+# L2 모드로 172.100.100.20 IP를 Ingress에 할당
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: ingress-pool
+  namespace: metallb-system
+spec:
+  addresses:
+  - 172.100.100.20-172.100.100.30
+  autoAssign: true
+
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: ingress-l2
+  namespace: metallb-system
+spec:
+  ipAddressPools:
+  - ingress-pool

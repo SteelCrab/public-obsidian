@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Architecture Template - EKS CI/CD Style</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root {
+    --bg: #F8F9FC; --card: #FFFFFF; --border: #E2E6EF;
+    --text-primary: #1A1D2B; --text-secondary: #6B7280; --text-muted: #9CA3AF;
+    --accent-blue: #3B82F6; --accent-blue-light: #EFF6FF;
+    --accent-orange: #F97316; --accent-orange-light: #FFF7ED;
+    --accent-green: #10B981; --accent-green-light: #ECFDF5;
+    --accent-purple: #8B5CF6; --accent-purple-light: #F5F3FF;
+    --accent-red: #EF4444; --accent-red-light: #FEF2F2;
+    --accent-cyan: #06B6D4; --accent-cyan-light: #ECFEFF;
+    --accent-amber: #F59E0B; --accent-amber-light: #FFFBEB;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.06);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.08);
+    --radius: 16px; --radius-sm: 10px;
+  }
+  body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text-primary); display: flex; justify-content: center; padding: 40px 20px; }
+  .canvas { width: 1200px; background: var(--card); border-radius: 24px; box-shadow: var(--shadow-lg); overflow: hidden; position: relative; }
+  .header { padding: 48px 56px 40px; background: linear-gradient(135deg, #F0F4FF 0%, #FAFBFF 50%, #F5F0FF 100%); border-bottom: 1px solid var(--border); }
+  .header h1 { font-size: 32px; font-weight: 800; background: linear-gradient(135deg, var(--text-primary) 0%, #374151 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .content { padding: 48px 56px 56px; }
+  .flow-row { display: grid; grid-template-columns: 140px 1fr; gap: 24px; align-items: start; margin-bottom: 8px; }
+  .phase-label { display: flex; flex-direction: column; padding-top: 20px; }
+  .phase-number { font-size: 11px; font-weight: 700; color: var(--text-muted); }
+  .phase-name { font-size: 18px; font-weight: 700; }
+  .arch-card { background: var(--card); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow-sm); }
+  .detail-chip { display: inline-flex; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-family: 'JetBrains Mono', monospace; font-weight: 500; margin-right: 6px; margin-top: 6px; background: var(--bg); }
+  .v-connector { display: flex; justify-content: center; margin-left: 164px; padding: 10px 0; }
+  .v-line { width: 2px; height: 30px; background: var(--border); position: relative; }
+  .v-arrow { width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 8px solid var(--border); position: absolute; bottom: -8px; left: -5px; }
+</style>
+</head>
+<body>
+<div class="canvas">
+  <div class="header">
+    <h1>Architecture Title</h1>
+    <p>Architecture subtitle and description</p>
+  </div>
+  <div class="content">
+    <div class="flow-row">
+      <div class="phase-label">
+        <span class="phase-number">PHASE 01</span>
+        <span class="phase-name">Step Name</span>
+      </div>
+      <div class="arch-card">
+        <h3>Component Name</h3>
+        <div class="card-details">
+          <span class="detail-chip">Detail 1</span>
+          <span class="detail-chip">Detail 2</span>
+        </div>
+      </div>
+    </div>
+    <div class="v-connector"><div class="v-line"><div class="v-arrow"></div></div></div>
+  </div>
+</div>
+</body>
+</html>

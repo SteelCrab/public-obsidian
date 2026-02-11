@@ -1,0 +1,67 @@
+# MySQL Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      imagePullSecrets:
+        - name: gitlab-registry-secret
+      containers:
+      - name: mysql
+        image: registry.gitlab.com/pyh5523/pista-megazoncloud/mysql:latest
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: MYSQL_ROOT_PASSWORD
+        - name: MYSQL_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: MYSQL_DATABASE
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: MYSQL_USER
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: MYSQL_PASSWORD
+        volumeMounts:
+        # MySQL 데이터 저장 경로 (PVC 사용)
+        - name: mysql-storage
+          mountPath: /var/lib/mysql
+        # 초기화 스크립트 (init.sql) - 최초 실행 시 테이블 생성
+        - name: mysql-init
+          mountPath: /docker-entrypoint-initdb.d
+        # MySQL 설정 파일 (UTF-8 설정)
+        - name: mysql-config-vol
+          mountPath: /etc/mysql/conf.d
+          readOnly: true
+      volumes:
+      # MySQL 데이터 영구 저장소 (PVC)
+      - name: mysql-storage
+        persistentVolumeClaim:
+          claimName: mysql-pvc
+      # 초기화 스크립트 ConfigMap (init.sql)
+      - name: mysql-init
+        configMap:
+          name: mysql-init-config-1
+      # MySQL 설정 ConfigMap (my-custom.cnf)
+      - name: mysql-config-vol
+        configMap:
+          name: mysql-init-config-2

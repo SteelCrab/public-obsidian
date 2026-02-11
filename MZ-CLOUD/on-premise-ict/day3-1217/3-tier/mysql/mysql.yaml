@@ -1,0 +1,195 @@
+# MySQL All-in-One YAML for Namespace: 3tier-mysql
+# 
+# 배포 방법:
+#   1. .env 파일 생성
+#   2. .env 파일 수정
+#   3. set -a && source .env && set +a && envsubst < mysql/mysql.yaml | kubectl apply -f -
+
+---
+# Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: 3tier-mysql
+
+---
+# ConfigMap - init.sql (테이블 생성용)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-init-config-1
+  namespace: 3tier-mysql
+data:
+  init.sql: |
+    USE `${MYSQL_DATABASE}`;
+    
+    -- WordPress용 데이터베이스 및 권한 생성
+    CREATE DATABASE IF NOT EXISTS `${WORDPRESS_DB_NAME}`;
+    GRANT ALL PRIVILEGES ON `${WORDPRESS_DB_NAME}`.* TO '${MYSQL_USER}'@'%';
+    FLUSH PRIVILEGES;
+    
+    -- 문자셋 설정 (한글 깨짐 방지)
+    SET NAMES utf8mb4;
+    
+    -- tmember 테이블 생성
+    CREATE TABLE IF NOT EXISTS tmember (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      user_id VARCHAR(50) NOT NULL,
+      name VARCHAR(100) NOT NULL,
+      email VARCHAR(100),
+      phone VARCHAR(20),
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    
+    -- 샘플 데이터 삽입
+    INSERT INTO tmember (user_id, name, email, phone) VALUES 
+      ('hong123', '홍길동', 'hong@example.com', '010-1234-5678'),
+      ('kim456', '김철수', 'kim@example.com', '010-2345-6789'),
+      ('lee789', '이영희', 'lee@example.com', '010-3456-7890');
+
+---
+# ConfigMap - MySQL 설정 (UTF-8)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-init-config-2
+  namespace: 3tier-mysql
+data:
+  my-custom.cnf: |
+    [mysqld]
+    # 문자셋을 UTF-8로 설정 (한글 지원)
+    character-set-server=utf8mb4
+    collation-server=utf8mb4_unicode_ci
+
+---
+# Secret - MySQL 인증정보
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql-secret
+  namespace: 3tier-mysql
+type: Opaque
+stringData:
+  MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+  MYSQL_USER: "${MYSQL_USER}"
+  MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+  MYSQL_DATABASE: "${MYSQL_DATABASE}"
+
+---
+# Secret - GitLab Container Registry 인증
+apiVersion: v1
+kind: Secret
+metadata:
+  name: gitlab-registry-secret
+  namespace: 3tier-mysql
+type: kubernetes.io/dockerconfigjson
+data:
+  .dockerconfigjson: ${DOCKER_CONFIG_JSON_BASE64}
+
+---
+# PersistentVolume (Cluster-scoped, namespace 없음)
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: 3tier-mysql-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: /data/3tier/mysql
+
+---
+# PersistentVolumeClaim
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pvc
+  namespace: 3tier-mysql
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-deployment
+  namespace: 3tier-mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      imagePullSecrets:
+        - name: gitlab-registry-secret
+      containers:
+      - name: mysql
+        image: registry.gitlab.com/pyh5523/pista-megazoncloud/3tier-mysql:latest
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: MYSQL_ROOT_PASSWORD
+        - name: MYSQL_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: MYSQL_DATABASE
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: MYSQL_USER
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: MYSQL_PASSWORD
+        volumeMounts:
+        - name: mysql-storage
+          mountPath: /var/lib/mysql
+        - name: mysql-init
+          mountPath: /docker-entrypoint-initdb.d
+        - name: mysql-config-vol
+          mountPath: /etc/mysql/conf.d
+          readOnly: true
+      volumes:
+      - name: mysql-storage
+        persistentVolumeClaim:
+          claimName: mysql-pvc
+      - name: mysql-init
+        configMap:
+          name: mysql-init-config-1
+      - name: mysql-config-vol
+        configMap:
+          name: mysql-init-config-2
+
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service
+  namespace: 3tier-mysql
+spec:
+  type: ClusterIP
+  selector:
+    app: mysql
+  ports:
+  - port: 3306
+    targetPort: 3306

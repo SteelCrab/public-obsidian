@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: pod-temp-2
+  name: pod-temp-2
+spec:
+  containers:
+    - image: ubuntu:24.04
+      name: pod-temp-1
+      resources: {}
+      volumeMounts:
+        - name: pod-vol
+          mountPath: /data1
+      command: ["/bin/sh", "-c","sleep infinity"]
+
+    - image: ubuntu:24.04
+      name: pod-temp-2
+      resources: {}
+      volumeMounts:
+        - name: pod-vol
+          mountPath: /data2
+      command: ["/bin/sh", "-c","sleep infinity"]
+
+  volumes:
+    - name: pod-vol
+      emptyDir: {}

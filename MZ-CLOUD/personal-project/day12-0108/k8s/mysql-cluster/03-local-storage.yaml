@@ -1,0 +1,98 @@
+# =============================================================================
+# [Step 3] Local Path StorageClass for MySQL InnoDB Cluster
+# 각 노드의 로컬 디스크 사용 (고성능, Group Replication이 데이터 복제 담당)
+# =============================================================================
+#
+# 선행조건: 노드별 디렉토리 생성 (/mnt/mysql-data)
+#
+# 사전 준비: 각 K8s 노드에서 디렉토리 생성 (k8s-m에서 실행)
+# for node in k8s-n1 k8s-n2 k8s-n3; do
+#   ssh $node "sudo mkdir -p /mnt/mysql-data && sudo chmod 777 /mnt/mysql-data"
+# done
+#
+# =============================================================================
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: local-storage
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+reclaimPolicy: Retain
+
+---
+# Local PV for mysql-0 (k8s-n1)
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-pv-0
+  labels:
+    app: mysql-cluster
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  local:
+    path: /mnt/mysql-data
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - k8s-n1
+
+---
+# Local PV for mysql-1 (k8s-n2)
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-pv-1
+  labels:
+    app: mysql-cluster
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  local:
+    path: /mnt/mysql-data
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - k8s-n2
+
+---
+# Local PV for mysql-2 (k8s-n3)
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-pv-2
+  labels:
+    app: mysql-cluster
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  local:
+    path: /mnt/mysql-data
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - k8s-n3

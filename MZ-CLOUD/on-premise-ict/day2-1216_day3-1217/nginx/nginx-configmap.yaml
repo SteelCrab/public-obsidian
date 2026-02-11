@@ -1,0 +1,83 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+data:
+  default.conf: |
+    server {
+        listen 80;
+        server_name localhost;
+
+        location / {
+            root /usr/share/nginx/html;
+            index index.html;
+        }
+
+        # FastAPI Root API 프록시
+        location /api/ {
+            proxy_pass http://fastapi-service:8000/;
+        }
+
+        # FastAPI Member API 프록시
+        location /member {
+            proxy_pass http://fastapi-service:8000/member;
+        }
+    }
+  index.html: |
+    <!DOCTYPE html>
+    <html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>3-TIER 구성하기</title>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            function callRoot() {
+                $.ajax({
+                    url: "/api/",
+                    method: "GET",
+                    dataType: "json",
+                    success: function (data) {
+                        document.getElementById('result').innerText = JSON.stringify(data, null, 2);
+                    },
+                    error: function (xhr, status, error) {
+                        document.getElementById('result').innerText = "Error: " + error;
+                    }
+                });
+            }
+
+            function callMember() {
+                $.ajax({
+                    url: "/member",
+                    method: "GET",
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.message === "success" && response.data) {
+                            var str = "ID | User ID | Name | Email | Phone\n";
+                            str += "-----------------------------------\n";
+                            for (var i = 0; i < response.data.length; i++) {
+                                var row = response.data[i];
+                                str += row.id + " | " + row.user_id + " | " + row.name + " | " + row.email + " | " + row.phone + "\n";
+                            }
+                            document.getElementById('result').innerText = str;
+                        } else {
+                            document.getElementById('result').innerText = JSON.stringify(response, null, 2);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        document.getElementById('result').innerText = "Error: " + error;
+                    }
+                });
+            }
+        </script>
+    </head>
+    <body>
+        <h1>FastAPI + MySQL 3-Tier</h1>
+        <div>
+            <button onclick="callRoot()">/ (Root API)</button>
+            <button onclick="callMember()">/member (MySQL 연결)</button>
+        </div>
+        <h2>결과:</h2>
+        <pre id="result">버튼을 클릭하세요</pre>
+    </body>
+    </html>
