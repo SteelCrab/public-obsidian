@@ -6,7 +6,7 @@
 
 Cloud SQL (MySQL 8.0) 인스턴스를 Private IP로 구축하는 모듈이다. VPC 피어링을 통해 내부 네트워크에서만 접근 가능.
 
-> 관련 문서: [[GCP_Scripts_MOC]] | [[gcp-script-env]] | [[gcp-cloud-sql]] | [[gcp-cloud-sql-connect]]
+> 관련 문서: [[GCP_Infra_MOC]] | [[gcp-script-env]] | [[gcp-cloud-sql]] | [[gcp-cloud-sql-connect]]
 
 ## 파일
 

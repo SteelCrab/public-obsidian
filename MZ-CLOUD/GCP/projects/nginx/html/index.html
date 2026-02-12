@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>EKS FastAPI</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <div class="container">
+            <img src="images/pistacrab-poly.png" alt="SteelCrab Logo" width="150" style="display: block; margin: 0 auto 20px;">
+            <h1>EKS FastAPI</h1>
+            <p>Nginx + FastAPI on Amazon EKS</p>
+
+            <div class="card">
+                <span class="badge" id="statusBadge">Checking...</span>
+                <div id="apiResult" class="api-result"></div>
+            </div>
+
+            <button class="btn" onclick="checkHealth()">Health Check</button>
+        </div>
+
+        <script src="script.js"></script>
+    </body>
+</html>

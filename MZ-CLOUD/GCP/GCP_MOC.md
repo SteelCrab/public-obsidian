@@ -24,6 +24,13 @@ GCP 관련 노트 모음
 - [[gcp-snapshot]] - 스냅샷 및 이미지
 - [[gcp-vm-cost]] - 비용 최적화
 
+## Containers & Kubernetes
+- [[gcp-gke]] - GKE 클러스터 및 Artifact Registry (GAR) 구축
+- [[gcp-gke-setup]] - (스크립트) GKE 구축 자동화
+
+## 구축 스크립트
+- [[gcp-scripts]] - 전체 스크립트 가이드 (Network, VM, GKE, DB, LB)
+
 ## 네트워크 (고급)
 - [[gcp-load-balancer]] - Load Balancer (HTTP/S, TCP/UDP, 내부, CDN)
 
@@ -41,6 +48,18 @@ GCP 관련 노트 모음
 - [[gcp-cloud-sql-connect]] - 연결 방법 (Auth Proxy, Private IP, Public IP)
 - [[gcp-cloud-sql-ha]] - 고가용성, 백업, 읽기 복제본
 - [[gcp-cloud-sql-ops]] - 운영 관리 및 구축 스크립트
+
+## 학습
+* [[MZ-CLOUD/GCP/2026-02-11|2026-02-11]]
+	*  GCS 정적 웹사이트 + Load Balancer
+	* HTTP(S) LB + 인스턴스 그룹 + 템플릿 구성
+* [[MZ-CLOUD/GCP/2026-02-12|2026-02-12]]
+	* GCP 네트워크 인프라 구성 (VPC, NAT, Firewall)
+	* VM 인스턴스 구성 (Public + Private)
+	* VM 인스턴스 구성 (Public + Private)
+	* Private VM 접속 (SSH 터널링)
+	* [[gcp-gke]] - GKE + Artifact Registry (GAR) 구축
+	* Nginx & FastAPI 멀티 배포 (LoadBalancer)
 
 ## 기타
 - [[CloudVPC]] - Cloud VPC 템플릿

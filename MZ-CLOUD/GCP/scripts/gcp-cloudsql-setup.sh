@@ -1,14 +1,13 @@
 #!/bin/bash
-# GCP Cloud SQL 모듈: Cloud SQL 인스턴스 구축
-# 독립 실행 가능 (ensure_network로 VPC 자동 생성)
-
+# GCP Cloud SQL 모듈: Cloud SQL (독립 실행, VPC 필수)
 set -e
-source "$(dirname "$0")/gcp-env.sh"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/gcp-env.sh"
 
 banner "Cloud SQL 인스턴스 구축"
 
-# ==================== 1. 네트워크 확인/생성 ====================
-ensure_network
+# 1. 네트워크 확인
+check_network
 
 # ==================== 2. Private Service Access 설정 ====================
 step 1 5 "Private Service Access 설정 중..."

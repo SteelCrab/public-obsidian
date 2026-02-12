@@ -6,7 +6,7 @@
 
 인스턴스 템플릿 + MIG + HTTP Load Balancer를 구축하는 모듈이다. 오토스케일링(2~5대)과 자동 복구가 포함된다.
 
-> 관련 문서: [[GCP_Scripts_MOC]] | [[gcp-script-env]] | [[gcp-load-balancer]] | [[gcp-instance-template]]
+> 관련 문서: [[GCP_Infra_MOC]] | [[gcp-script-env]] | [[gcp-load-balancer]] | [[gcp-instance-template]]
 
 ## 파일
 
@@ -17,11 +17,16 @@
 
 ---
 
+## 사전 요구사항
+* **네트워크 구축 필수**: `bash gcp-network-setup.sh` 실행 필요.
+
+---
+
 ## 생성 리소스
 
 | 리소스 | 이름 | 설명 |
 |--------|------|------|
-| 인스턴스 템플릿 | `pista-web-template` | e2-micro, Nginx, ubuntu-2204-lts |
+| 인스턴스 템플릿 | `pista-web-template` | e2-micro, Nginx, Ubuntu 24.04 LTS |
 | 헬스 체크 | `pista-health-check` | HTTP:80, 10초 간격 |
 | MIG | `pista-web-mig` | 리전 MIG, 2~5대, CPU 75% 오토스케일링 |
 | 백엔드 서비스 | `pista-backend-service` | MIG 연결, max utilization 80% |

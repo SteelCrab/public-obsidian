@@ -6,7 +6,7 @@
 
 최소 구성 VM 2대(Public + Private)를 빠르게 구축하는 모듈이다. VM 모듈과 별도의 인스턴스를 사용한다.
 
-> 관련 문서: [[GCP_Scripts_MOC]] | [[gcp-script-env]] | [[gcp-script-vm]] | [[gcp-compute-engine]]
+> 관련 문서: [[GCP_Infra_MOC]] | [[gcp-script-env]] | [[gcp-script-vm]] | [[gcp-compute-engine]]
 
 ## 파일
 

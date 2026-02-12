@@ -6,7 +6,7 @@
 
 VPC 네트워크와 VM 인스턴스 2대(Public + Private)를 구축하는 모듈이다.
 
-> 관련 문서: [[GCP_Scripts_MOC]] | [[gcp-script-env]] | [[gcp-compute-engine]] | [[gcp-vpc]]
+> 관련 문서: [[GCP_Infra_MOC]] | [[gcp-script-env]] | [[gcp-compute-engine]] | [[gcp-vpc]]
 
 ## 파일
 
@@ -17,13 +17,17 @@ VPC 네트워크와 VM 인스턴스 2대(Public + Private)를 구축하는 모�
 
 ---
 
+## 사전 요구사항
+* **네트워크 구축 필수**: `bash gcp-network-setup.sh`가 먼저 실행되어 있어야 한다.
+
+---
+
 ## 생성 리소스
 
 | 리소스 | 이름 | 설명 |
 |--------|------|------|
-| 공유 네트워크 | - | VPC+서브넷+Router+NAT+방화벽 ([[gcp-script-env\|ensure_network]]) |
-| Public VM | `pista-public-nginx` | Public 서브넷, 외부 IP, Nginx, e2-micro |
-| Private VM | `pista-private-nginx` | Private 서브넷, 내부 전용, Nginx, e2-micro |
+| Public VM | `pista-public-nginx` | Public 서브넷, 외부 IP, Nginx, e2-micro (Ubuntu 24.04) |
+| Private VM | `pista-private-nginx` | Private 서브넷, 내부 전용, Nginx, e2-micro (Ubuntu 24.04) |
 
 ---
 

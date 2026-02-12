@@ -75,13 +75,13 @@ gcloud compute routers nats list --router=pista-router \
 
 ### Cloud NAT 옵션
 
-| **옵션** | **설명** | **값** |
-|---------|---------|--------|
-| `--router` | Cloud Router 이름 | `pista-router` |
-| `--nat-all-subnet-ip-ranges` | 모든 서브넷에 NAT 적용 | 플래그 설정 |
-| `--nat-custom-subnet-ip-ranges` | 특정 서브넷만 NAT 적용 | 서브넷 이름 지정 |
-| `--auto-allocate-nat-external-ips` | 외부 IP 자동 할당 | 플래그 설정 |
-| `--nat-external-ip-pool` | 수동으로 예약된 IP 사용 | IP 주소 지정 |
+| **옵션**                             | **설명**          | **값**          |
+| ---------------------------------- | --------------- | -------------- |
+| `--router`                         | Cloud Router 이름 | `pista-router` |
+| `--nat-all-subnet-ip-ranges`       | 모든 서브넷에 NAT 적용  | 플래그 설정         |
+| `--nat-custom-subnet-ip-ranges`    | 특정 서브넷만 NAT 적용  | 서브넷 이름 지정      |
+| `--auto-allocate-nat-external-ips` | 외부 IP 자동 할당     | 플래그 설정         |
+| `--nat-external-ip-pool`           | 수동으로 예약된 IP 사용  | IP 주소 지정       |
 
 ---
 

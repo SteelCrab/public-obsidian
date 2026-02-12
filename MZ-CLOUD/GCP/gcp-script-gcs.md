@@ -6,7 +6,7 @@
 
 Cloud Storage 버킷을 백엔드로 사용하는 HTTP Load Balancer + CDN을 구축하는 모듈이다. VPC 불필요 — 완전 독립 실행.
 
-> 관련 문서: [[GCP_Scripts_MOC]] | [[gcp-script-env]] | [[gcp-storage-bucket]] | [[gcp-storage-web]]
+> 관련 문서: [[GCP_Infra_MOC]] | [[gcp-script-env]] | [[gcp-storage-bucket]] | [[gcp-storage-web]]
 
 ## 파일
 

@@ -6,7 +6,7 @@
 
 모든 GCP 인프라 스크립트가 `source`하는 공통 환경 변수와 헬퍼 함수를 정리한다.
 
-> 관련 문서: [[GCP_Scripts_MOC]] | [[gcp-vpc]] | [[gcp-firewall]] | [[gcp-cloud-nat]]
+> 관련 문서: [[GCP_Infra_MOC]] | [[gcp-vpc]] | [[gcp-firewall]] | [[gcp-cloud-nat]]
 
 ## 사용 방법
 
@@ -30,7 +30,9 @@ source "$(dirname "$0")/gcp-env.sh"
 | SQL | `$SQL_INSTANCE` / `$DB_NAME` / `$DB_USER` | `pista-mysql` / `pista-appdb` / `pista-user` |
 | LB | `$TEMPLATE_NAME` / `$MIG_NAME` / `$LB_IP_NAME` | `pista-web-template` / `pista-web-mig` / `pista-lb-ip` |
 | GCS | `$GCS_BUCKET` / `$GCS_LB_IP` | `pista-static-site` / `pista-static-lb-ip` |
-| Simple | `$SIMPLE_PUBLIC_VM` / `$SIMPLE_PRIVATE_VM` | `pista-pub-nginx` / `pista-priv-nginx` |
+| GKE | `$CLUSTER_NAME` / `$REPO_NAME` | `pista-cluster` / `pista-repo` |
+| Image | `$IMG_NGINX` / `$IMG_FASTAPI` | `pista-nginx` / `pista-fastapi` |
+| Source | `$PROJECT_ROOT` | `MZ-CLOUD/GCP/projects` |
 
 ---
 
