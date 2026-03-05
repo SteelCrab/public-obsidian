@@ -1,6 +1,6 @@
 # GCP 인프라 구축 스크립트
 
-#gcp #스크립트 #인프라 #moc
+#gcp #스크립트 #인프라 #MOC
 
 ---
 
@@ -140,6 +140,7 @@ scripts/
 
 ## 관련 노트
 
+- [[GCP_Scripts_MOC]] | [[gcp-scripts]] - 스크립트 허브 및 실행 가이드
 - [[gcp-vpc]] | [[gcp-cloud-nat]] | [[gcp-firewall]]
 - [[gcp-compute-engine]] | [[gcp-instance-template]]
 - [[gcp-cloud-sql]] | [[gcp-cloud-sql-connect]]

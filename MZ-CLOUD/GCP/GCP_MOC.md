@@ -1,6 +1,6 @@
 # GCP (Google Cloud Platform)
 
-#gcp #cloud #moc
+#gcp #cloud #MOC
 
 ---
 
@@ -29,7 +29,17 @@ GCP 관련 노트 모음
 - [[gcp-gke-setup]] - (스크립트) GKE 구축 자동화
 
 ## 구축 스크립트
-- [[gcp-scripts]] - 전체 스크립트 가이드 (Network, VM, GKE, DB, LB)
+- [[GCP_Scripts_MOC]] - 스크립트 문서 허브 (모듈별 인덱스)
+- [[gcp-scripts]] - 전체 실행 가이드 (Workflow, 실행/정리 명령)
+
+## IaC (Terraform)
+- [Terraform 튜토리얼](./terraform/Terraform_MOC.md) - GCP Terraform 튜토리얼 목차
+- [[terraform-resource-types]] - AWS vs GCP 주요 리소스 유형 비교
+- [[terraform-install]] - Terraform 설치 가이드
+- [[terraform-network]] - (1) 네트워크 (VPC) 구축
+- [[terraform-vm]] - (2) VM 인스턴스 구축
+- [[terraform-gke]] - (3) GKE 클러스터 구축
+- [[terraform-lb]] - (4) Load Balancer 구축
 
 ## 네트워크 (고급)
 - [[gcp-load-balancer]] - Load Balancer (HTTP/S, TCP/UDP, 내부, CDN)
@@ -60,6 +70,9 @@ GCP 관련 노트 모음
 	* Private VM 접속 (SSH 터널링)
 	* [[gcp-gke]] - GKE + Artifact Registry (GAR) 구축
 	* Nginx & FastAPI 멀티 배포 (LoadBalancer)
+* [[2026-02-19]]
+	* Terraform 리소스 유형 정리 (AWS vs GCP 비교)
+	* Terraform 설치 가이드 (macOS / Windows)
 
 ## 기타
 - [[CloudVPC]] - Cloud VPC 템플릿

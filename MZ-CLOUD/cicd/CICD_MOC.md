@@ -57,6 +57,26 @@ EKS FastAPI + Nginx    ← Nginx(NLB) + FastAPI(ClusterIP) + Kustomize + ArgoCD
 ALB Ingress 배포       ← 경로 기반 라우팅, 멀티 컨테이너
   │
 IRSA                   ← Pod 단위 IAM 역할
+  │
+CI/CD 기초 + 분기 전략 (03-04)       ← GitFlow/GitHub Flow, 배포 전략, 도구 비교
+  │
+GitHub Actions + 테스트 (03-05)      ← OIDC 인증, 테스트 피라미드, pytest/Jest
+  │
+Terraform State + 환경관리 (03-06)   ← S3 Backend, DynamoDB Lock, Multi-Env
+  │
+Terraform 보안 자동화 (03-09)        ← tfsec/checkov, Terratest, pre-commit
+  │
+AWS CI/CD 서비스 개요 (03-10)        ← CodePipeline/CodeBuild/CodeDeploy 비교
+  │
+Blue/Green + EKS 배포 (03-11)        ← CodeDeploy, EKS 배포 전략
+  │
+ArgoCD GitOps 멀티클러스터 (03-12)  ← Hub-Spoke, ApplicationSet
+  │
+DR 설계 + Pilot Light (03-13)        ← DR 4전략 비교, RTO/RPO 매트릭스
+  │
+DR Failover 자동화 (03-16)           ← Git 기반 Failover, Secrets, DR 훈련
+  │
+종합 아키텍처 리뷰 (03-17)           ← E2E 흐름도, 분기 실무, 로드맵
 ```
 
 ---
@@ -70,6 +90,16 @@ IRSA                   ← Pod 단위 IAM 역할
 | 02-05 | [[CICD_2026-02-05]] | SSM을 통한 S3 배포 | [[cicd-deploy-asg]] |
 | 02-06 | [[CICD_2026-02-06]] | AWS EKS 설치 및 클러스터 구성, LB Controller | [[cicd-deploy-eks]] |
 | 02-09 | [[CICD_2026-02-09]] | EKS + Nginx + FastAPI + ArgoCD + Kustomize 배포 | [[cicd-deploy-eks]] |
+| 03-04 | [20260304-CICD-기초-개념](../TEAM-PROJECT/yonghyeon/20260304-CICD-기초-개념/README.md) | CI/CD 기초 + 분기 전략 + 배포 전략 비교 | — |
+| 03-05 | [20260305-GitHub-Actions-워크플로우](../TEAM-PROJECT/yonghyeon/20260305-GitHub-Actions-워크플로우/README.md) | GitHub Actions + OIDC + 테스트 자동화 | — |
+| 03-06 | [20260306-Terraform-State-환경관리](../TEAM-PROJECT/yonghyeon/20260306-Terraform-State-환경관리/README.md) | Terraform State 관리 + Multi-Environment | — |
+| 03-09 | [20260309-Terraform-CICD-보안-자동화](../TEAM-PROJECT/yonghyeon/20260309-Terraform-CICD-보안-자동화/README.md) | tfsec/checkov + Terratest + DR 프로젝트 적용 | — |
+| 03-10 | [20260310-AWS-CICD-서비스-개요](../TEAM-PROJECT/yonghyeon/20260310-AWS-CICD-서비스-개요/README.md) | CodePipeline / CodeBuild / CodeDeploy 개요 | — |
+| 03-11 | [20260311-배포전략-BlueGreen-EKS](../TEAM-PROJECT/yonghyeon/20260311-배포전략-BlueGreen-EKS/README.md) | CodeDeploy Blue/Green + EKS 배포 전략 | — |
+| 03-12 | [20260312-ArgoCD-GitOps-멀티클러스터](../TEAM-PROJECT/yonghyeon/20260312-ArgoCD-GitOps-멀티클러스터/README.md) | ArgoCD Hub-Spoke + ApplicationSet | — |
+| 03-13 | [20260313-DR-설계-Pilot-Light](../TEAM-PROJECT/yonghyeon/20260313-DR-설계-Pilot-Light/README.md) | DR 4전략 비교 + Pilot Light 아키텍처 | — |
+| 03-16 | [20260316-DR-Failover-자동화](../TEAM-PROJECT/yonghyeon/20260316-DR-Failover-자동화/README.md) | Failover 자동화 + Secrets + DR 테스트 훈련 | — |
+| 03-17 | [20260317-종합-아키텍처-리뷰](../TEAM-PROJECT/yonghyeon/20260317-종합-아키텍처-리뷰/README.md) | E2E 아키텍처 리뷰 + 분기 실무 + 로드맵 | — |
 
 ---
 
@@ -109,7 +139,7 @@ IRSA                   ← Pod 단위 IAM 역할
 | 워크플로우 | 설명 | 배포 방식 |
 |----------|------|----------|
 | [[gha-example-fastapi-dockerhub]] | FastAPI → DockerHub → SSH 배포 | SSH |
-| [[gha-examplel-nginx-dockerhub]] | Nginx → DockerHub → SSM 배포 | SSM |
+| [Nginx → DockerHub → SSM 배포](../github/example/gha-example-nginx-dockerhub.md) | Nginx → DockerHub → SSM 배포 | SSM |
 | [[gha-example-nginx-ecr-ssm]] | Nginx → ECR → SSM 배포 | SSM |
 | [[gha-example-fastapi-ecr-ssm]] | FastAPI → ECR → SSM 배포 | SSM |
 

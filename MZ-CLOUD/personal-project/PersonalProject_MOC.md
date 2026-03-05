@@ -42,7 +42,7 @@ On-Premise VMware 환경 기반 Kubernetes 3-Tier 고가용성 시스템 프로�
 
 - [Day 8](./day8-0104/README.md) - InnoDB Cluster 구성
 - [Day 9](./day9-0105/README.md) - 구성 진행
-- [Day 10](./day10-0106/REAMDE.md) - 구성 진행
+- [Day 10](./day10-0106/README.md) - 구성 진행
 - [Day 12: MySQL Cluster](./day12-0108/README.md) - Operator, InnoDB Cluster, Backup, 최종 배포
 - [MySQL Cluster K8s 배포 가이드](./day12-0108/k8s/mysql-cluster/README.md)
 

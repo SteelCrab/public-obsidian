@@ -79,7 +79,7 @@ GitHub Actions 워크플로우 YAML 구성을 연결하는 허브 노트.
 - [[gha-example-nginx-dockerhub]] - Nginx + Docker Hub + EC2 배포
 - [[gha-example-fastapi-ecr-ssm]] - FastAPI + ECR + SSM 배포
 - [[gha-example-nginx-ecr-ssm]] - Nginx + ECR + SSM 배포  
-* [[gha-gha-example-s3-ecr-ssm]] - S3 + SSM 배포
+* [S3 + SSM 배포](./example/gha-example-s3-ecr-ssm.md) - S3 + SSM 배포
 ---
 
 ## 빠른 참조
